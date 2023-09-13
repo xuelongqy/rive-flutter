@@ -1,7 +1,8 @@
-/// Core automatically generated
-/// lib/src/generated/constraints/distance_constraint_base.dart.
-/// Do not modify manually.
+// Core automatically generated
+// lib/src/generated/constraints/distance_constraint_base.dart.
+// Do not modify manually.
 
+import 'package:rive/src/core/core.dart';
 import 'package:rive/src/generated/component_base.dart';
 import 'package:rive/src/generated/constraints/constraint_base.dart';
 import 'package:rive/src/rive_core/constraints/targeted_constraint.dart';
@@ -20,9 +21,9 @@ abstract class DistanceConstraintBase extends TargetedConstraint {
 
   /// --------------------------------------------------------------------------
   /// Distance field with key 177.
+  static const int distancePropertyKey = 177;
   static const double distanceInitialValue = 100.0;
   double _distance = distanceInitialValue;
-  static const int distancePropertyKey = 177;
 
   /// The unit distance the constraint will move the constrained object relative
   /// to the target.
@@ -45,9 +46,9 @@ abstract class DistanceConstraintBase extends TargetedConstraint {
 
   /// --------------------------------------------------------------------------
   /// ModeValue field with key 178.
+  static const int modeValuePropertyKey = 178;
   static const int modeValueInitialValue = 0;
   int _modeValue = modeValueInitialValue;
-  static const int modeValuePropertyKey = 178;
 
   /// Backing value for the mode enum.
   int get modeValue => _modeValue;
@@ -68,9 +69,11 @@ abstract class DistanceConstraintBase extends TargetedConstraint {
   void modeValueChanged(int from, int to);
 
   @override
-  void copy(covariant DistanceConstraintBase source) {
+  void copy(Core source) {
     super.copy(source);
-    _distance = source._distance;
-    _modeValue = source._modeValue;
+    if (source is DistanceConstraintBase) {
+      _distance = source._distance;
+      _modeValue = source._modeValue;
+    }
   }
 }

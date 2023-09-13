@@ -1,3 +1,111 @@
+## 0.11.17
+
+- Timeline based events with new example showing how to play audio when an event fires.
+
+## 0.11.16
+
+- Updates to text engine to support newer version of clang on Windows.
+
+## 0.11.15
+
+- New event system! Listen to events reported by a StateMachine via StateMachineController.addEventListener.
+- Fixes an issue with animations not playing back correctly when a work area is defined.
+
+## 0.11.14
+
+- Refactor how hit testing is performed in `RiveAnimation` and `Rive` widgets. Pointer events (listeners) can now be enabled on the `Rive` widget by setting `enablePointerEvents` to `true` (default is false).
+- Change in how animations advance when using `RiveAnimation` and `Rive` widgets. Now using `Ticker`, which will allow Rive animations to respect `timeDilation` and `TickerMode`. Resolves [187](https://github.com/rive-app/rive-flutter/issues/187), [254](https://github.com/rive-app/rive-flutter/issues/254), [307](https://github.com/rive-app/rive-flutter/issues/307), and [328](https://github.com/rive-app/rive-flutter/issues/328)
+- Support for line spacing.
+
+## 0.11.13
+
+- Initializes Rive's text engine only when necessary when calling any of `RiveFile.asset`, `RiveFile.network`, or `RiveFile.file`.
+- You'll need to manually call `RiveFile.initializeText` when calling `RiveFile.import` directly to use text features. You can optionally only call this if you know the file needs the text engine, or you can determine if it needs it by calling `RiveFile.needsTextRuntime`.
+
+## 0.11.12
+
+- Fixes a memory leak in the text engine.
+
+## 0.11.11
+
+- Fixes an issue with text clipping when baseline is aligned to origin.
+
+## 0.11.10
+
+- Fixes an issue with the origin on the TransformConstraint affecting non-text objects.
+
+## 0.11.9
+
+- Fix [335](https://github.com/rive-app/rive-flutter/issues/335) \_debugDisposed issue
+- Fix issue showing text when the default font is not available at `assets/fonts/Inter-Regular.ttf` ([338](https://github.com/rive-app/rive-flutter/issues/338)). We will set first valid font we encounter in a rive file as default font instead.
+
+## 0.11.8
+
+- Fix text origin changing updating text offset.
+
+## 0.11.7
+
+- Fix for gradients on text.
+
+## 0.11.6
+
+- Follow path constraint.
+- Expose `useArtboardSize` in `RiveAnimation` widget. Which is a boolean that determines whether to use the inherent size of the artboard, i.e. the absolute size defined by the artboard, or size the widget based on the available constraints only (sized by parent).
+- Add `clipRect` to `RiveAnimation` and `Rive` widgets. Forces the artboard to clip with the provided Rect.
+- Fixed `Rive` widget always applying a clip, regardless of `Artboard.clip` value (set in the Editor).
+- Support for run targeting with text modifiers.
+- Transform constraint can target text origin.
+
+## 0.11.5
+
+- Resolve assets, such as images and fonts, manually. This allows for swapping out image/font assets at runtime, instead of using the embedded versions. See `RiveFile` and `CallbackAssetLoader`.
+- Update `http` package to v1.1.0
+- Fix [[331](https://github.com/rive-app/rive-flutter/issues/331)] - external control on a Joystick not applied
+
+Deprecated:
+
+- `assetResolver` parameter on `RiveFile.network` and `RiveFile.import`. Use `assetLoader` instead - see `CallbackAssetLoader`.
+- `NetworkAssetResolver`, use `CallbackAssetLoader` instead.
+
+## 0.11.4
+
+- Adds interpolation on states feature.
+
+## 0.11.3
+
+- Bumps rive_common to add Android namespace to support Gradle 8 (issue [312](https://github.com/rive-app/rive-flutter/issues/312)).
+
+## 0.11.2
+
+- Add parameter to specify headers on `RiveAnimation.network` widget, and `RiveFile.network`.
+
+## 0.11.1
+
+- Joysticks with custom handle sources.
+
+## 0.11.0
+
+- Joysticks!
+- Bumping to latest rive_common with some changes to AABB math api.
+- Bumping Dart SDK requirements.
+
+## 0.10.4
+
+- Support for Solos.
+
+## 0.10.3
+
+- Fixes animations with negative speed to play from the end with ping pong and one shot animations.
+- Update runtime to consider speed on animation states when playing state machines.
+- Fix edge case with spilled time, by clearing spilled time after an advance cycle.
+
+## 0.10.2
+
+- Performance improvement: No longer drawing components with an opacity of 0.
+- Updated example, see "Skinning Demo".
+- Support for negative speeds on linear animations when played back in state machines.
+- Support for overriding speed on animation states.
+
 ## 0.10.1
 
 - Fix [[277](https://github.com/rive-app/rive-flutter/issues/277)] and [[278](https://github.com/rive-app/rive-flutter/issues/278)] that resuled in `onInit` being called with each `setState` - thank you [xuelongqy](https://github.com/xuelongqy).

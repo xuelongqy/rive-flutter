@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:rive/rive.dart';
-import 'package:rive_common/math.dart';
 
 /// Specifies whether a source is from an asset bundle or http
 enum _Source {
@@ -15,7 +14,7 @@ enum _Source {
 typedef OnInitCallback = void Function(Artboard);
 
 /// High level widget that plays an animation from a Rive file. If artboard or
-/// animation are not specified, the default artboard and first animation fonund
+/// animation are not specified, the default artboard and first animation found
 /// within it are used.
 class RiveAnimation extends StatefulWidget {
   /// The asset name or url
@@ -48,12 +47,21 @@ class RiveAnimation extends StatefulWidget {
   /// Enable/disable antialiasing when rendering
   final bool antialiasing;
 
+  /// {@macro Rive.useArtboardSize}
+  final bool useArtboardSize;
+
+  /// {@macro Rive.clipRect}
+  final Rect? clipRect;
+
   /// Controllers for instanced animations and state machines; use this
   /// to directly control animation states instead of passing names.
   final List<RiveAnimationController> controllers;
 
   /// Callback fired when [RiveAnimation] has initialized
   final OnInitCallback? onInit;
+
+  /// Headers for network requests
+  final Map<String, String>? headers;
 
   /// Creates a new [RiveAnimation] from an asset bundle.
   ///
@@ -70,11 +78,14 @@ class RiveAnimation extends StatefulWidget {
     this.alignment,
     this.placeHolder,
     this.antialiasing = true,
+    this.useArtboardSize = false,
+    this.clipRect,
     this.controllers = const [],
     this.onInit,
     Key? key,
   })  : name = asset,
         file = null,
+        headers = null,
         src = _Source.asset,
         super(key: key);
 
@@ -93,8 +104,11 @@ class RiveAnimation extends StatefulWidget {
     this.alignment,
     this.placeHolder,
     this.antialiasing = true,
+    this.useArtboardSize = false,
+    this.clipRect,
     this.controllers = const [],
     this.onInit,
+    this.headers,
     Key? key,
   })  : name = url,
         file = null,
@@ -116,11 +130,14 @@ class RiveAnimation extends StatefulWidget {
     this.alignment,
     this.placeHolder,
     this.antialiasing = true,
+    this.useArtboardSize = false,
+    this.clipRect,
     this.controllers = const [],
     this.onInit,
     Key? key,
   })  : name = path,
         file = null,
+        headers = null,
         src = _Source.file,
         super(key: key);
 
@@ -141,10 +158,13 @@ class RiveAnimation extends StatefulWidget {
     this.alignment,
     this.placeHolder,
     this.antialiasing = true,
+    this.useArtboardSize = false,
+    this.clipRect,
     this.controllers = const [],
     this.onInit,
     Key? key,
   })  : name = null,
+        headers = null,
         src = _Source.direct,
         super(key: key);
 
@@ -180,13 +200,22 @@ class RiveAnimationState extends State<RiveAnimation> {
   Future<RiveFile> _loadRiveFile() {
     switch (widget.src) {
       case _Source.asset:
-        return RiveFile.asset(widget.name!);
+        return RiveFile.asset(
+          widget.name!,
+        );
       case _Source.network:
-        return RiveFile.network(widget.name!);
+        return RiveFile.network(
+          widget.name!,
+          headers: widget.headers,
+        );
       case _Source.file:
-        return RiveFile.file(widget.name!);
+        return RiveFile.file(
+          widget.name!,
+        );
       case _Source.direct:
-        return Future.value(widget.file!);
+        return Future.value(
+          widget.file!,
+        );
     }
   }
 
@@ -281,87 +310,23 @@ class RiveAnimationState extends State<RiveAnimation> {
     super.dispose();
   }
 
-  Vec2D? _toArtboard(Offset local) {
-    RiveRenderObject? riveRenderer;
-    var renderObject = context.findRenderObject();
-    if (renderObject is! RenderBox) {
-      return null;
-    }
-    renderObject.visitChildren(
-      (child) {
-        if (child is RiveRenderObject) {
-          riveRenderer = child;
-        }
-      },
-    );
-    if (riveRenderer == null) {
-      return null;
-    }
-    var globalCoordinates = renderObject.localToGlobal(local);
-
-    return riveRenderer!.globalToArtboard(globalCoordinates);
-  }
-
-  Widget _optionalHitTester(BuildContext context, Widget child) {
-    assert(_artboard != null);
-    var hasHitTesting = _artboard!.animationControllers.any(
-      (controller) =>
-          controller is StateMachineController &&
-          (controller.hitShapes.isNotEmpty ||
-              controller.hitNestedArtboards.isNotEmpty),
-    );
-
-    if (hasHitTesting) {
-      void hitHelper(PointerEvent event,
-          void Function(StateMachineController, Vec2D) callback) {
-        var artboardPosition = _toArtboard(event.localPosition);
-        if (artboardPosition != null) {
-          var stateMachineControllers = _artboard!.animationControllers
-              .whereType<StateMachineController>();
-          for (final stateMachineController in stateMachineControllers) {
-            callback(stateMachineController, artboardPosition);
-          }
-        }
-      }
-
-      return Listener(
-        onPointerDown: (details) => hitHelper(
-          details,
-          (controller, artboardPosition) =>
-              controller.pointerDown(artboardPosition, details),
-        ),
-        onPointerUp: (details) => hitHelper(
-          details,
-          (controller, artboardPosition) =>
-              controller.pointerUp(artboardPosition),
-        ),
-        onPointerHover: (details) => hitHelper(
-          details,
-          (controller, artboardPosition) =>
-              controller.pointerMove(artboardPosition),
-        ),
-        onPointerMove: (details) => hitHelper(
-          details,
-          (controller, artboardPosition) =>
-              controller.pointerMove(artboardPosition),
-        ),
-        child: child,
+  bool get _shouldAddHitTesting => _artboard!.animationControllers.any(
+        (controller) =>
+            controller is StateMachineController &&
+            (controller.hitShapes.isNotEmpty ||
+                controller.hitNestedArtboards.isNotEmpty),
       );
-    }
-
-    return child;
-  }
 
   @override
   Widget build(BuildContext context) => _artboard != null
-      ? _optionalHitTester(
-          context,
-          Rive(
-            artboard: _artboard!,
-            fit: widget.fit,
-            alignment: widget.alignment,
-            antialiasing: widget.antialiasing,
-          ),
+      ? Rive(
+          artboard: _artboard!,
+          fit: widget.fit,
+          alignment: widget.alignment,
+          antialiasing: widget.antialiasing,
+          useArtboardSize: widget.useArtboardSize,
+          clipRect: widget.clipRect,
+          enablePointerEvents: _shouldAddHitTesting,
         )
       : widget.placeHolder ?? const SizedBox();
 }

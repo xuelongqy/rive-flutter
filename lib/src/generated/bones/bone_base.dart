@@ -1,6 +1,7 @@
-/// Core automatically generated lib/src/generated/bones/bone_base.dart.
-/// Do not modify manually.
+// Core automatically generated lib/src/generated/bones/bone_base.dart.
+// Do not modify manually.
 
+import 'package:rive/src/core/core.dart';
 import 'package:rive/src/generated/component_base.dart';
 import 'package:rive/src/generated/container_component_base.dart';
 import 'package:rive/src/generated/transform_component_base.dart';
@@ -23,9 +24,9 @@ abstract class BoneBase extends SkeletalComponent {
 
   /// --------------------------------------------------------------------------
   /// Length field with key 89.
+  static const int lengthPropertyKey = 89;
   static const double lengthInitialValue = 0;
   double _length = lengthInitialValue;
-  static const int lengthPropertyKey = 89;
   double get length => _length;
 
   /// Change the [_length] field value.
@@ -44,8 +45,10 @@ abstract class BoneBase extends SkeletalComponent {
   void lengthChanged(double from, double to);
 
   @override
-  void copy(covariant BoneBase source) {
+  void copy(Core source) {
     super.copy(source);
-    _length = source._length;
+    if (source is BoneBase) {
+      _length = source._length;
+    }
   }
 }

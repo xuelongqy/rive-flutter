@@ -13,6 +13,8 @@ import 'package:rive_common/math.dart';
 
 export 'package:rive/src/generated/shapes/path_base.dart';
 
+enum Axis { horizontal, vertical }
+
 /// An abstract low level path that gets implemented by parametric and point
 /// based paths.
 abstract class Path extends PathBase {
@@ -71,9 +73,15 @@ abstract class Path extends PathBase {
   }
 
   @override
+  void onDirty(int mask) {
+    if ((dirt & ComponentDirt.worldTransform) != 0) {
+      _shape?.pathChanged(this);
+    }
+  }
+
+  @override
   void updateWorldTransform() {
     super.updateWorldTransform();
-    _shape?.pathChanged(this);
 
     // Paths store their inverse world so that it's available for skinning and
     // other operations that occur at runtime.
@@ -280,6 +288,7 @@ abstract class Path extends PathBase {
     return true;
   }
 
+  @override
   AABB get localBounds => _renderPath.preciseComputeBounds();
   AABB computeBounds(Mat2D relativeTo) => preciseComputeBounds(
         transform: Mat2D.multiply(
@@ -414,9 +423,21 @@ class RenderPath implements PathInterface {
             point.apply(transform);
           }
           _expandBoundsForAxis(
-              bounds, 0, penPosition.x, outPoint.x, inPoint.x, point.x);
+            bounds,
+            Axis.horizontal,
+            penPosition.x,
+            outPoint.x,
+            inPoint.x,
+            point.x,
+          );
           _expandBoundsForAxis(
-              bounds, 1, penPosition.y, outPoint.y, inPoint.y, point.y);
+            bounds,
+            Axis.vertical,
+            penPosition.y,
+            outPoint.y,
+            inPoint.y,
+            point.y,
+          );
           penPosition = point;
 
           break;
@@ -429,38 +450,41 @@ class RenderPath implements PathInterface {
 }
 
 /// Expand our bounds to a point (in normalized T space) on the Cubic.
-void _expandBoundsToCubicPoint(AABB bounds, int component, double t, double a,
-    double b, double c, double d) {
+void _expandBoundsToCubicPoint(
+    AABB bounds, Axis axis, double t, double a, double b, double c, double d) {
   if (t >= 0 && t <= 1) {
     var ti = 1 - t;
     double extremaY = ((ti * ti * ti) * a) +
         ((3 * ti * ti * t) * b) +
         ((3 * ti * t * t) * c) +
         (t * t * t * d);
-    if (extremaY < bounds[component]) {
-      bounds[component] = extremaY;
+    __expandBounds(bounds, axis, extremaY);
+  }
+}
+
+void __expandBounds(AABB bounds, Axis axis, double value) {
+  if (axis == Axis.horizontal) {
+    if (value < bounds.left) {
+      bounds.left = value;
     }
-    if (extremaY > bounds[component + 2]) {
-      bounds[component + 2] = extremaY;
+    if (value > bounds.right) {
+      bounds.right = value;
+    }
+  } else {
+    if (value < bounds.top) {
+      bounds.top = value;
+    }
+    if (value > bounds.bottom) {
+      bounds.bottom = value;
     }
   }
 }
 
-void _expandBoundsForAxis(AABB bounds, int component, double start, double cp1,
-    double cp2, double end) {
+void _expandBoundsForAxis(
+    AABB bounds, Axis axis, double start, double cp1, double cp2, double end) {
   // Check start/end as cubic goes through those.
-  if (start < bounds[component]) {
-    bounds[component] = start;
-  }
-  if (start > bounds[component + 2]) {
-    bounds[component + 2] = start;
-  }
-  if (end < bounds[component]) {
-    bounds[component] = end;
-  }
-  if (end > bounds[component + 2]) {
-    bounds[component + 2] = end;
-  }
+  __expandBounds(bounds, axis, start);
+  __expandBounds(bounds, axis, end);
   // Now check extremas.
 
   // Find the first derivative
@@ -476,12 +500,12 @@ void _expandBoundsForAxis(AABB bounds, int component, double start, double cp1,
 
     // First root.
     _expandBoundsToCubicPoint(
-        bounds, component, -(m1 + m2) / d, start, cp1, cp2, end);
+        bounds, axis, -(m1 + m2) / d, start, cp1, cp2, end);
     _expandBoundsToCubicPoint(
-        bounds, component, -(-m1 + m2) / d, start, cp1, cp2, end);
+        bounds, axis, -(-m1 + m2) / d, start, cp1, cp2, end);
   } else if (b != c && d == 0) {
     _expandBoundsToCubicPoint(
-        bounds, component, (2 * b - c) / (2 * (b - c)), start, cp1, cp2, end);
+        bounds, axis, (2 * b - c) / (2 * (b - c)), start, cp1, cp2, end);
   }
 
   // Derive the first derivative to get the 2nd and use the root of
@@ -490,7 +514,7 @@ void _expandBoundsForAxis(AABB bounds, int component, double start, double cp1,
   var d2b = 2 * (c - b);
   if (d2a != b) {
     _expandBoundsToCubicPoint(
-        bounds, component, d2a / (d2a - d2b), start, cp1, cp2, end);
+        bounds, axis, d2a / (d2a - d2b), start, cp1, cp2, end);
   }
 }
 

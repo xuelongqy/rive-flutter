@@ -1,32 +1,49 @@
+import 'package:rive/src/asset_loader.dart';
 import 'package:rive/src/core/core.dart';
+import 'package:rive/src/debug.dart';
 import 'package:rive/src/rive_core/assets/file_asset.dart';
 import 'package:rive/src/rive_core/assets/file_asset_contents.dart';
 
-/// A helper for resolving Rive file assets (like images) that are provided out
-/// of band with regards to the .riv file itself.
+// TODO: Deprecated. Remove this in the next major version (0.12.0).
 // ignore: one_member_abstracts
 abstract class FileAssetResolver {
   Future<Uint8List> loadContents(FileAsset asset);
 }
 
 class FileAssetImporter extends ImportStackObject {
-  final FileAssetResolver? assetResolver;
+  final FileAssetLoader? assetLoader;
   final FileAsset fileAsset;
+  final bool loadEmbeddedAssets;
 
-  FileAssetImporter(this.fileAsset, this.assetResolver);
+  FileAssetImporter(
+    this.fileAsset,
+    this.assetLoader, {
+    this.loadEmbeddedAssets = true,
+  });
 
-  bool _loadedContents = false;
+  bool _contentsResolved = false;
 
-  void loadContents(FileAssetContents contents) {
-    _loadedContents = true;
-    fileAsset.decode(contents.bytes);
+  void resolveContents(FileAssetContents contents) {
+    if (loadEmbeddedAssets) {
+      _contentsResolved = true;
+      fileAsset.decode(contents.bytes);
+    }
   }
 
   @override
   bool resolve() {
-    if (!_loadedContents) {
+    if (!_contentsResolved) {
       // try to get them out of band
-      assetResolver?.loadContents(fileAsset).then(fileAsset.decode);
+      assetLoader?.load(fileAsset).then((loaded) {
+        // TODO: improve error logging
+        if (!loaded) {
+          printDebugMessage(
+            '''Rive asset (${fileAsset.name}) was not able to load:
+  - Unique file name: ${fileAsset.uniqueFilename}
+  - Asset id: ${fileAsset.id}''',
+          );
+        }
+      });
     }
     return super.resolve();
   }

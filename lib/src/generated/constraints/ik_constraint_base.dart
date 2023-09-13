@@ -1,7 +1,8 @@
-/// Core automatically generated
-/// lib/src/generated/constraints/ik_constraint_base.dart.
-/// Do not modify manually.
+// Core automatically generated
+// lib/src/generated/constraints/ik_constraint_base.dart.
+// Do not modify manually.
 
+import 'package:rive/src/core/core.dart';
 import 'package:rive/src/generated/component_base.dart';
 import 'package:rive/src/generated/constraints/constraint_base.dart';
 import 'package:rive/src/rive_core/constraints/targeted_constraint.dart';
@@ -20,9 +21,9 @@ abstract class IKConstraintBase extends TargetedConstraint {
 
   /// --------------------------------------------------------------------------
   /// InvertDirection field with key 174.
+  static const int invertDirectionPropertyKey = 174;
   static const bool invertDirectionInitialValue = false;
   bool _invertDirection = invertDirectionInitialValue;
-  static const int invertDirectionPropertyKey = 174;
 
   /// True when the direction taken towards the target should be inverted from
   /// the default.
@@ -46,9 +47,9 @@ abstract class IKConstraintBase extends TargetedConstraint {
 
   /// --------------------------------------------------------------------------
   /// ParentBoneCount field with key 175.
+  static const int parentBoneCountPropertyKey = 175;
   static const int parentBoneCountInitialValue = 0;
   int _parentBoneCount = parentBoneCountInitialValue;
-  static const int parentBoneCountPropertyKey = 175;
 
   /// The number of bones above this one that are influenced by this IK
   /// constraint.
@@ -71,9 +72,11 @@ abstract class IKConstraintBase extends TargetedConstraint {
   void parentBoneCountChanged(int from, int to);
 
   @override
-  void copy(covariant IKConstraintBase source) {
+  void copy(Core source) {
     super.copy(source);
-    _invertDirection = source._invertDirection;
-    _parentBoneCount = source._parentBoneCount;
+    if (source is IKConstraintBase) {
+      _invertDirection = source._invertDirection;
+      _parentBoneCount = source._parentBoneCount;
+    }
   }
 }

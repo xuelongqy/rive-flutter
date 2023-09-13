@@ -1,3 +1,5 @@
+library rive_core;
+
 import 'dart:collection';
 
 import 'package:flutter/gestures.dart';
@@ -8,27 +10,34 @@ import 'package:rive/src/rive_core/animation/animation_state_instance.dart';
 import 'package:rive/src/rive_core/animation/any_state.dart';
 import 'package:rive/src/rive_core/animation/entry_state.dart';
 import 'package:rive/src/rive_core/animation/exit_state.dart';
+import 'package:rive/src/rive_core/animation/keyed_object.dart';
 import 'package:rive/src/rive_core/animation/layer_state.dart';
 import 'package:rive/src/rive_core/animation/linear_animation.dart';
 import 'package:rive/src/rive_core/animation/nested_state_machine.dart';
 import 'package:rive/src/rive_core/animation/state_instance.dart';
 import 'package:rive/src/rive_core/animation/state_machine.dart';
+import 'package:rive/src/rive_core/animation/state_machine_fire_event.dart';
 import 'package:rive/src/rive_core/animation/state_machine_layer.dart';
 import 'package:rive/src/rive_core/animation/state_machine_listener.dart';
 import 'package:rive/src/rive_core/animation/state_machine_trigger.dart';
 import 'package:rive/src/rive_core/animation/state_transition.dart';
 import 'package:rive/src/rive_core/artboard.dart';
+import 'package:rive/src/rive_core/event.dart';
 import 'package:rive/src/rive_core/nested_artboard.dart';
 import 'package:rive/src/rive_core/node.dart';
 import 'package:rive/src/rive_core/rive_animation_controller.dart';
 import 'package:rive/src/rive_core/shapes/shape.dart';
 import 'package:rive_common/math.dart';
 
-/// Callback signature for satate machine state changes
-typedef OnStateChange = void Function(String, String);
+/// Callback signature for state machine state changes
+typedef OnStateChange = void Function(
+    String stateMachineName, String stateName);
 
 /// Callback signature for layer state changes
 typedef OnLayerStateChange = void Function(LayerState);
+
+/// Callback signature for events firing.
+typedef OnEvent = void Function(Event);
 
 class LayerController {
   final StateMachineLayer layer;
@@ -39,6 +48,7 @@ class LayerController {
   StateInstance? _stateFrom;
   bool _holdAnimationFrom = false;
   StateTransition? _transition;
+  bool _transitionCompleted = false;
   double _mix = 1.0;
   double _mixFrom = 1.0;
 
@@ -58,15 +68,35 @@ class LayerController {
     _changeState(layer.entryState);
   }
 
+  void _fireEvents(Iterable<StateMachineFireEvent> fireEvents) {
+    for (final fireEvent in fireEvents) {
+      Event event = core.resolveWithDefault(fireEvent.eventId, Event.unknown);
+      if (event != Event.unknown) {
+        controller.reportEvent(event);
+      }
+    }
+  }
+
   bool _changeState(LayerState? state, {StateTransition? transition}) {
     assert(state is! AnyState,
         'We don\'t allow making the AnyState an active state.');
     if (state == _currentState?.state) {
       return false;
     }
-    _currentState?.dispose();
+    var currentState = _currentState;
+    if (currentState != null) {
+      _fireEvents(currentState.state.eventsAt(StateMachineFireOccurance.atEnd));
+      currentState.dispose();
+    }
+    var nextState = state;
 
-    _currentState = state?.makeInstance();
+    if (nextState != null) {
+      _currentState = nextState.makeInstance();
+      _fireEvents(nextState.eventsAt(StateMachineFireOccurance.atStart));
+    } else {
+      _currentState = null;
+    }
+
     return true;
   }
 
@@ -82,12 +112,16 @@ class LayerController {
       _mix != 1;
 
   void _updateMix(double elapsedSeconds) {
-    if (_transition != null &&
-        _stateFrom != null &&
-        _transition!.duration != 0) {
-      _mix = (_mix + elapsedSeconds / _transition!.mixTime(_stateFrom!.state))
+    var transition = _transition;
+    if (transition != null && _stateFrom != null && transition.duration != 0) {
+      _mix = (_mix + elapsedSeconds / transition.mixTime(_stateFrom!.state))
           .clamp(0, 1)
           .toDouble();
+
+      if (_mix == 1 && !_transitionCompleted) {
+        _transitionCompleted = true;
+        _fireEvents(transition.eventsAt(StateMachineFireOccurance.atEnd));
+      }
     } else {
       _mix = 1;
     }
@@ -98,11 +132,16 @@ class LayerController {
       _holdAnimation!.apply(_holdTime, coreContext: core, mix: _mixFrom);
       _holdAnimation = null;
     }
+
+    final interpolator = _transition?.interpolator;
+
     if (_stateFrom != null && _mix < 1) {
-      _stateFrom!.apply(core, _mixFrom);
+      final _applyMixFrom = interpolator?.transform(_mixFrom) ?? _mixFrom;
+      _stateFrom!.apply(core, _applyMixFrom);
     }
     if (_currentState != null) {
-      _currentState!.apply(core, _mix);
+      final _applyMix = interpolator?.transform(_mix) ?? _mix;
+      _currentState!.apply(core, _applyMix);
     }
   }
 
@@ -135,6 +174,13 @@ class LayerController {
 
     _apply(core);
 
+    // give the current state the oportunity to clear spilled time, so that we
+    // do not carry this over into another iteration.
+    _currentState?.clearSpilledTime();
+
+    // We still need to mix in the current state if mix value is less than one
+    // as it still contributes to the end result.
+    // It may not need to advance but it does need to apply.
     return _mix != 1 || _waitingForExit || (_currentState?.keepGoing ?? false);
   }
 
@@ -167,6 +213,15 @@ class LayerController {
           _changeState(transition.stateTo, transition: transition)) {
         // Take transition
         _transition = transition;
+
+        _fireEvents(transition.eventsAt(StateMachineFireOccurance.atStart));
+        // Immediately fire end events if transition has no duration.
+        if (transition.duration == 0) {
+          _transitionCompleted = true;
+          _fireEvents(transition.eventsAt(StateMachineFireOccurance.atEnd));
+        } else {
+          _transitionCompleted = false;
+        }
 
         _stateFrom = outState;
 
@@ -208,16 +263,31 @@ class LayerController {
   }
 }
 
-class StateMachineController extends RiveAnimationController<CoreContext> {
+class StateMachineController extends RiveAnimationController<CoreContext>
+    implements KeyedCallbackReporter {
   final StateMachine stateMachine;
   final _inputValues = HashMap<int, dynamic>();
   final layerControllers = <LayerController>[];
+  final _firedEvents = <Event>[];
 
   /// Optional callback for state changes
   final OnStateChange? onStateChange;
 
+  final _eventListeners = <OnEvent>{};
+
   /// Constructor that takes a state machine and optional state change callback
-  StateMachineController(this.stateMachine, {this.onStateChange});
+  StateMachineController(
+    this.stateMachine, {
+    @Deprecated('Use `addEventListener` instead.') this.onStateChange,
+  });
+
+  void addEventListener(OnEvent callback) => _eventListeners.add(callback);
+  void removeEventListener(OnEvent callback) =>
+      _eventListeners.remove(callback);
+
+  void reportEvent(Event event) {
+    _firedEvents.add(event);
+  }
 
   void _clearLayerControllers() {
     for (final layer in layerControllers) {
@@ -278,23 +348,25 @@ class StateMachineController extends RiveAnimationController<CoreContext> {
     // Initialize all events.
     HashMap<Shape, _HitShape> hitShapeLookup = HashMap<Shape, _HitShape>();
     for (final event in stateMachine.listeners) {
-      // Resolve target on this artboard instance.
-      var node = core.resolve<Node>(event.targetId);
-      if (node == null) {
-        continue;
-      }
-
-      node.forAll((component) {
-        if (component is Shape) {
-          var hitShape = hitShapeLookup[component];
-          if (hitShape == null) {
-            hitShapeLookup[component] = hitShape = _HitShape(component);
-          }
-          hitShape.events.add(event);
+      if (event is StateMachineListener) {
+        // Resolve target on this artboard instance.
+        var node = core.resolve<Node>(event.targetId);
+        if (node == null) {
+          continue;
         }
-        // Keep iterating so we find all shapes.
-        return true;
-      });
+
+        node.forAll((component) {
+          if (component is Shape) {
+            var hitShape = hitShapeLookup[component];
+            if (hitShape == null) {
+              hitShapeLookup[component] = hitShape = _HitShape(component);
+            }
+            hitShape.events.add(event);
+          }
+          // Keep iterating so we find all shapes.
+          return true;
+        });
+      }
     }
     hitShapes = hitShapeLookup.values.toList();
 
@@ -343,6 +415,13 @@ class StateMachineController extends RiveAnimationController<CoreContext> {
     }
     advanceInputs();
     isActive = keepGoing;
+
+    // Callback for events.
+    if (_firedEvents.isNotEmpty) {
+      var events = _firedEvents.toList(growable: false);
+      _firedEvents.clear();
+      _eventListeners.toList().forEach(events.forEach);
+    }
   }
 
   bool _processEvent(
@@ -463,6 +542,31 @@ class StateMachineController extends RiveAnimationController<CoreContext> {
         position,
         hitEvent: ListenerType.up,
       );
+
+  void pointerExit(Vec2D position) => _processEvent(
+        position,
+        hitEvent: ListenerType.exit,
+      );
+
+  void pointerEnter(Vec2D position) => _processEvent(
+        position,
+        hitEvent: ListenerType.enter,
+      );
+
+  /// Implementation of interface that reports which time based events have
+  /// elapsed on a timeline within this state machine.
+  @override
+  void reportKeyedCallback(
+      int objectId, int propertyKey, double elapsedSeconds) {
+    var coreObject = core.resolve(objectId);
+    if (coreObject != null) {
+      RiveCoreContext.setCallback(
+        coreObject,
+        propertyKey,
+        CallbackData(this, delay: elapsedSeconds),
+      );
+    }
+  }
 }
 
 /// Representation of a Shape from the Artboard Instance and all the events it

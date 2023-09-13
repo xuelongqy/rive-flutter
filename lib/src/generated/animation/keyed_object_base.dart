@@ -1,6 +1,6 @@
-/// Core automatically generated
-/// lib/src/generated/animation/keyed_object_base.dart.
-/// Do not modify manually.
+// Core automatically generated
+// lib/src/generated/animation/keyed_object_base.dart.
+// Do not modify manually.
 
 import 'package:rive/src/core/core.dart';
 
@@ -13,9 +13,9 @@ abstract class KeyedObjectBase<T extends CoreContext> extends Core<T> {
 
   /// --------------------------------------------------------------------------
   /// ObjectId field with key 51.
+  static const int objectIdPropertyKey = 51;
   static const int objectIdInitialValue = 0;
   int _objectId = objectIdInitialValue;
-  static const int objectIdPropertyKey = 51;
 
   /// Identifier used to track the object that is keyed.
   int get objectId => _objectId;
@@ -36,7 +36,9 @@ abstract class KeyedObjectBase<T extends CoreContext> extends Core<T> {
   void objectIdChanged(int from, int to);
 
   @override
-  void copy(covariant KeyedObjectBase source) {
-    _objectId = source._objectId;
+  void copy(Core source) {
+    if (source is KeyedObjectBase) {
+      _objectId = source._objectId;
+    }
   }
 }

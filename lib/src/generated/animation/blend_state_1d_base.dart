@@ -1,7 +1,8 @@
-/// Core automatically generated
-/// lib/src/generated/animation/blend_state_1d_base.dart.
-/// Do not modify manually.
+// Core automatically generated
+// lib/src/generated/animation/blend_state_1d_base.dart.
+// Do not modify manually.
 
+import 'package:rive/src/core/core.dart';
 import 'package:rive/src/generated/animation/layer_state_base.dart';
 import 'package:rive/src/generated/animation/state_machine_layer_component_base.dart';
 import 'package:rive/src/rive_core/animation/blend_animation_1d.dart';
@@ -21,9 +22,9 @@ abstract class BlendState1DBase extends BlendState<BlendAnimation1D> {
 
   /// --------------------------------------------------------------------------
   /// InputId field with key 167.
+  static const int inputIdPropertyKey = 167;
   static const int inputIdInitialValue = -1;
   int _inputId = inputIdInitialValue;
-  static const int inputIdPropertyKey = 167;
 
   /// Id of the input that drives the mix value for this blend state.
   int get inputId => _inputId;
@@ -44,8 +45,10 @@ abstract class BlendState1DBase extends BlendState<BlendAnimation1D> {
   void inputIdChanged(int from, int to);
 
   @override
-  void copy(covariant BlendState1DBase source) {
+  void copy(Core source) {
     super.copy(source);
-    _inputId = source._inputId;
+    if (source is BlendState1DBase) {
+      _inputId = source._inputId;
+    }
   }
 }

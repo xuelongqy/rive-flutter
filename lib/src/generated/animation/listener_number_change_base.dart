@@ -1,7 +1,8 @@
-/// Core automatically generated
-/// lib/src/generated/animation/listener_number_change_base.dart.
-/// Do not modify manually.
+// Core automatically generated
+// lib/src/generated/animation/listener_number_change_base.dart.
+// Do not modify manually.
 
+import 'package:rive/src/core/core.dart';
 import 'package:rive/src/generated/animation/listener_action_base.dart';
 import 'package:rive/src/rive_core/animation/listener_input_change.dart';
 
@@ -18,9 +19,9 @@ abstract class ListenerNumberChangeBase extends ListenerInputChange {
 
   /// --------------------------------------------------------------------------
   /// Value field with key 229.
+  static const int valuePropertyKey = 229;
   static const double valueInitialValue = 0;
   double _value = valueInitialValue;
-  static const int valuePropertyKey = 229;
 
   /// Value to set the input to when the listener occurs.
   double get value => _value;
@@ -41,8 +42,10 @@ abstract class ListenerNumberChangeBase extends ListenerInputChange {
   void valueChanged(double from, double to);
 
   @override
-  void copy(covariant ListenerNumberChangeBase source) {
+  void copy(Core source) {
     super.copy(source);
-    _value = source._value;
+    if (source is ListenerNumberChangeBase) {
+      _value = source._value;
+    }
   }
 }

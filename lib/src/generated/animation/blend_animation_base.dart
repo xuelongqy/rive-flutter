@@ -1,6 +1,6 @@
-/// Core automatically generated
-/// lib/src/generated/animation/blend_animation_base.dart.
-/// Do not modify manually.
+// Core automatically generated
+// lib/src/generated/animation/blend_animation_base.dart.
+// Do not modify manually.
 
 import 'package:rive/src/core/core.dart';
 
@@ -13,9 +13,9 @@ abstract class BlendAnimationBase<T extends CoreContext> extends Core<T> {
 
   /// --------------------------------------------------------------------------
   /// AnimationId field with key 165.
+  static const int animationIdPropertyKey = 165;
   static const int animationIdInitialValue = -1;
   int _animationId = animationIdInitialValue;
-  static const int animationIdPropertyKey = 165;
 
   /// Id of the animation this BlendAnimation references.
   int get animationId => _animationId;
@@ -37,7 +37,9 @@ abstract class BlendAnimationBase<T extends CoreContext> extends Core<T> {
   void animationIdChanged(int from, int to);
 
   @override
-  void copy(covariant BlendAnimationBase source) {
-    _animationId = source._animationId;
+  void copy(Core source) {
+    if (source is BlendAnimationBase) {
+      _animationId = source._animationId;
+    }
   }
 }

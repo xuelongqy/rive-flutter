@@ -1,7 +1,8 @@
-/// Core automatically generated
-/// lib/src/generated/constraints/targeted_constraint_base.dart.
-/// Do not modify manually.
+// Core automatically generated
+// lib/src/generated/constraints/targeted_constraint_base.dart.
+// Do not modify manually.
 
+import 'package:rive/src/core/core.dart';
 import 'package:rive/src/generated/component_base.dart';
 import 'package:rive/src/rive_core/constraints/constraint.dart';
 
@@ -18,9 +19,9 @@ abstract class TargetedConstraintBase extends Constraint {
 
   /// --------------------------------------------------------------------------
   /// TargetId field with key 173.
+  static const int targetIdPropertyKey = 173;
   static const int targetIdInitialValue = -1;
   int _targetId = targetIdInitialValue;
-  static const int targetIdPropertyKey = 173;
 
   /// Identifier used to track the TransformComponent used as the target for the
   /// constraint.
@@ -42,8 +43,10 @@ abstract class TargetedConstraintBase extends Constraint {
   void targetIdChanged(int from, int to);
 
   @override
-  void copy(covariant TargetedConstraintBase source) {
+  void copy(Core source) {
     super.copy(source);
-    _targetId = source._targetId;
+    if (source is TargetedConstraintBase) {
+      _targetId = source._targetId;
+    }
   }
 }

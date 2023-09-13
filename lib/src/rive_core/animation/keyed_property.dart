@@ -1,5 +1,6 @@
 import 'package:rive/src/core/core.dart';
 import 'package:rive/src/generated/animation/keyed_property_base.dart';
+import 'package:rive/src/rive_core/animation/interpolating_keyframe.dart';
 import 'package:rive/src/rive_core/animation/keyed_object.dart';
 import 'package:rive/src/rive_core/animation/keyframe.dart';
 
@@ -62,7 +63,6 @@ class KeyedProperty extends KeyedPropertyBase<RuntimeArtboard>
   @override
   void onAddedDirty() {}
 
-
   /// Called by rive_core to add a KeyFrame to this KeyedProperty. This should
   /// be @internal when it's supported.
   bool internalAddKeyFrame(KeyFrame frame) {
@@ -83,6 +83,8 @@ class KeyedProperty extends KeyedPropertyBase<RuntimeArtboard>
       // property. Wait for any other pending changes to complete before
       // checking.
       context.dirty(_checkShouldRemove);
+    } else {
+      markKeyFrameOrderDirty();
     }
 
     return removed;
@@ -105,17 +107,6 @@ class KeyedProperty extends KeyedPropertyBase<RuntimeArtboard>
 
   void _sortAndValidateKeyFrames() {
     sort();
-
-    for (int i = 0; i < _keyframes.length - 1; i++) {
-      var a = _keyframes[i];
-      var b = _keyframes[i + 1];
-      if (a.frame == b.frame) {
-        // N.B. this removes it from the list too.
-        context.removeObject(a);
-        // Repeat current.
-        i--;
-      }
-    }
   }
 
   /// Number of keyframes for this keyed property.
@@ -123,7 +114,7 @@ class KeyedProperty extends KeyedPropertyBase<RuntimeArtboard>
 
   KeyFrame getFrameAt(int index) => _keyframes[index];
 
-  int closestFrameIndex(double seconds) {
+  int closestFrameIndex(double seconds, {int exactOffset = 0}) {
     int idx = 0;
     // Binary find the keyframe index (use timeInSeconds here as opposed to the
     // finder above which operates in frames).
@@ -140,14 +131,41 @@ class KeyedProperty extends KeyedPropertyBase<RuntimeArtboard>
       } else if (closestSeconds > seconds) {
         end = mid - 1;
       } else {
-        idx = start = mid;
-        break;
+        return mid + exactOffset;
       }
       idx = start;
     }
     return idx;
   }
 
+  bool get isCallback => RiveCoreContext.isCallback(propertyKey);
+
+  /// Report any keyframes that occured between secondsFrom and secondsTo.
+  void reportKeyedCallbacks(
+    int objectId,
+    double secondsFrom,
+    double secondsTo, {
+    required KeyedCallbackReporter reporter,
+  }) {
+    int idx = closestFrameIndex(secondsFrom, exactOffset: 1);
+    int idxTo = closestFrameIndex(secondsTo, exactOffset: 1);
+
+    // going backwards?
+    if (idxTo < idx) {
+      var swap = idx;
+      idx = idxTo;
+      idxTo = swap;
+    }
+
+    while (idxTo > idx) {
+      var frame = _keyframes[idx];
+      reporter.reportKeyedCallback(
+          objectId, propertyKey, secondsTo - frame.seconds);
+      idx++;
+    }
+  }
+
+  /// Apply keyframe values at a given time expressed in [seconds].
   void apply(double seconds, double mix, Core object) {
     if (_keyframes.isEmpty) {
       return;
@@ -161,7 +179,8 @@ class KeyedProperty extends KeyedPropertyBase<RuntimeArtboard>
       first.apply(object, pk, mix);
     } else {
       if (idx < _keyframes.length) {
-        KeyFrame fromFrame = _keyframes[idx - 1];
+        InterpolatingKeyFrame fromFrame =
+            _keyframes[idx - 1] as InterpolatingKeyFrame;
         KeyFrame toFrame = _keyframes[idx];
         if (seconds == toFrame.seconds) {
           toFrame.apply(object, pk, mix);

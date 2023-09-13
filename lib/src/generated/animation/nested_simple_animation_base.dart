@@ -1,7 +1,8 @@
-/// Core automatically generated
-/// lib/src/generated/animation/nested_simple_animation_base.dart.
-/// Do not modify manually.
+// Core automatically generated
+// lib/src/generated/animation/nested_simple_animation_base.dart.
+// Do not modify manually.
 
+import 'package:rive/src/core/core.dart';
 import 'package:rive/src/generated/component_base.dart';
 import 'package:rive/src/generated/container_component_base.dart';
 import 'package:rive/src/generated/nested_animation_base.dart';
@@ -22,9 +23,9 @@ abstract class NestedSimpleAnimationBase extends NestedLinearAnimation {
 
   /// --------------------------------------------------------------------------
   /// Speed field with key 199.
+  static const int speedPropertyKey = 199;
   static const double speedInitialValue = 1;
   double _speed = speedInitialValue;
-  static const int speedPropertyKey = 199;
 
   /// Speed to play the nested animation at.
   double get speed => _speed;
@@ -46,9 +47,9 @@ abstract class NestedSimpleAnimationBase extends NestedLinearAnimation {
 
   /// --------------------------------------------------------------------------
   /// IsPlaying field with key 201.
+  static const int isPlayingPropertyKey = 201;
   static const bool isPlayingInitialValue = false;
   bool _isPlaying = isPlayingInitialValue;
-  static const int isPlayingPropertyKey = 201;
 
   /// Enumerated backing value for playback state.
   bool get isPlaying => _isPlaying;
@@ -69,9 +70,11 @@ abstract class NestedSimpleAnimationBase extends NestedLinearAnimation {
   void isPlayingChanged(bool from, bool to);
 
   @override
-  void copy(covariant NestedSimpleAnimationBase source) {
+  void copy(Core source) {
     super.copy(source);
-    _speed = source._speed;
-    _isPlaying = source._isPlaying;
+    if (source is NestedSimpleAnimationBase) {
+      _speed = source._speed;
+      _isPlaying = source._isPlaying;
+    }
   }
 }

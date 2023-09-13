@@ -1,7 +1,8 @@
-/// Core automatically generated
-/// lib/src/generated/animation/linear_animation_base.dart.
-/// Do not modify manually.
+// Core automatically generated
+// lib/src/generated/animation/linear_animation_base.dart.
+// Do not modify manually.
 
+import 'package:rive/src/core/core.dart';
 import 'package:rive/src/rive_core/animation/animation.dart';
 
 abstract class LinearAnimationBase extends Animation {
@@ -14,9 +15,9 @@ abstract class LinearAnimationBase extends Animation {
 
   /// --------------------------------------------------------------------------
   /// Fps field with key 56.
+  static const int fpsPropertyKey = 56;
   static const int fpsInitialValue = 60;
   int _fps = fpsInitialValue;
-  static const int fpsPropertyKey = 56;
 
   /// Frames per second used to quantize keyframe times to discrete values that
   /// match this rate.
@@ -39,9 +40,9 @@ abstract class LinearAnimationBase extends Animation {
 
   /// --------------------------------------------------------------------------
   /// Duration field with key 57.
+  static const int durationPropertyKey = 57;
   static const int durationInitialValue = 60;
   int _duration = durationInitialValue;
-  static const int durationPropertyKey = 57;
 
   /// Duration expressed in number of frames.
   int get duration => _duration;
@@ -63,9 +64,9 @@ abstract class LinearAnimationBase extends Animation {
 
   /// --------------------------------------------------------------------------
   /// Speed field with key 58.
+  static const int speedPropertyKey = 58;
   static const double speedInitialValue = 1;
   double _speed = speedInitialValue;
-  static const int speedPropertyKey = 58;
 
   /// Playback speed multiplier.
   double get speed => _speed;
@@ -87,9 +88,9 @@ abstract class LinearAnimationBase extends Animation {
 
   /// --------------------------------------------------------------------------
   /// LoopValue field with key 59.
+  static const int loopValuePropertyKey = 59;
   static const int loopValueInitialValue = 0;
   int _loopValue = loopValueInitialValue;
-  static const int loopValuePropertyKey = 59;
 
   /// Loop value option matches Loop enumeration.
   int get loopValue => _loopValue;
@@ -111,9 +112,9 @@ abstract class LinearAnimationBase extends Animation {
 
   /// --------------------------------------------------------------------------
   /// WorkStart field with key 60.
+  static const int workStartPropertyKey = 60;
   static const int workStartInitialValue = -1;
   int _workStart = workStartInitialValue;
-  static const int workStartPropertyKey = 60;
 
   /// Start of the work area in frames.
   int get workStart => _workStart;
@@ -135,9 +136,9 @@ abstract class LinearAnimationBase extends Animation {
 
   /// --------------------------------------------------------------------------
   /// WorkEnd field with key 61.
+  static const int workEndPropertyKey = 61;
   static const int workEndInitialValue = -1;
   int _workEnd = workEndInitialValue;
-  static const int workEndPropertyKey = 61;
 
   /// End of the work area in frames.
   int get workEnd => _workEnd;
@@ -159,9 +160,9 @@ abstract class LinearAnimationBase extends Animation {
 
   /// --------------------------------------------------------------------------
   /// EnableWorkArea field with key 62.
+  static const int enableWorkAreaPropertyKey = 62;
   static const bool enableWorkAreaInitialValue = false;
   bool _enableWorkArea = enableWorkAreaInitialValue;
-  static const int enableWorkAreaPropertyKey = 62;
 
   /// Whether or not the work area is enabled.
   bool get enableWorkArea => _enableWorkArea;
@@ -182,15 +183,43 @@ abstract class LinearAnimationBase extends Animation {
 
   void enableWorkAreaChanged(bool from, bool to);
 
+  /// --------------------------------------------------------------------------
+  /// Quantize field with key 376.
+  static const int quantizePropertyKey = 376;
+  static const bool quantizeInitialValue = false;
+  bool _quantize = quantizeInitialValue;
+
+  /// Whether frames are quantized to desired frame rate or floating based on
+  /// runtime speed.
+  bool get quantize => _quantize;
+
+  /// Change the [_quantize] field value.
+  /// [quantizeChanged] will be invoked only if the field's value has changed.
+  set quantize(bool value) {
+    if (_quantize == value) {
+      return;
+    }
+    bool from = _quantize;
+    _quantize = value;
+    if (hasValidated) {
+      quantizeChanged(from, value);
+    }
+  }
+
+  void quantizeChanged(bool from, bool to);
+
   @override
-  void copy(covariant LinearAnimationBase source) {
+  void copy(Core source) {
     super.copy(source);
-    _fps = source._fps;
-    _duration = source._duration;
-    _speed = source._speed;
-    _loopValue = source._loopValue;
-    _workStart = source._workStart;
-    _workEnd = source._workEnd;
-    _enableWorkArea = source._enableWorkArea;
+    if (source is LinearAnimationBase) {
+      _fps = source._fps;
+      _duration = source._duration;
+      _speed = source._speed;
+      _loopValue = source._loopValue;
+      _workStart = source._workStart;
+      _workEnd = source._workEnd;
+      _enableWorkArea = source._enableWorkArea;
+      _quantize = source._quantize;
+    }
   }
 }

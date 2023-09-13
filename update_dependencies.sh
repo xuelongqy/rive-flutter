@@ -24,8 +24,6 @@ function installRiveCpp {
             echo "Getting rive-cpp from current repo."
             export INSTALL_TO=$PWD
             mkdir -p rive-cpp
-            # cp -fR ../../runtime rive-cpp
-            # git clone machine1:/path/to/project machine2:/target/path
             pushd ../../runtime
 
             function copyRepoFile {
@@ -59,12 +57,12 @@ function installRiveCpp {
         echo "Cloning Harfbuzz."
         git clone https://github.com/harfbuzz/harfbuzz
         pushd harfbuzz
-        git checkout 858570b1d9912a1b746ab39fbe62a646c4f7a5b1 .
+        git checkout "6.0.0" .
         popd
     fi
     if [ $FORCE == "true" ] || [ ! -d SheenBidi ]; then
         rm -fR SheenBidi
-        echo "Cloning Harfbuzz."
+        echo "Cloning SheenBidi."
         git clone https://github.com/Tehreer/SheenBidi.git
         pushd SheenBidi
         git checkout v2.6 .

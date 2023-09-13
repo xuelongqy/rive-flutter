@@ -1,7 +1,8 @@
-/// Core automatically generated
-/// lib/src/generated/shapes/cubic_asymmetric_vertex_base.dart.
-/// Do not modify manually.
+// Core automatically generated
+// lib/src/generated/shapes/cubic_asymmetric_vertex_base.dart.
+// Do not modify manually.
 
+import 'package:rive/src/core/core.dart';
 import 'package:rive/src/generated/component_base.dart';
 import 'package:rive/src/generated/container_component_base.dart';
 import 'package:rive/src/generated/shapes/path_vertex_base.dart';
@@ -24,9 +25,9 @@ abstract class CubicAsymmetricVertexBase extends CubicVertex {
 
   /// --------------------------------------------------------------------------
   /// Rotation field with key 79.
+  static const int rotationPropertyKey = 79;
   static const double rotationInitialValue = 0;
   double _rotation = rotationInitialValue;
-  static const int rotationPropertyKey = 79;
 
   /// The control points' angle.
   double get rotation => _rotation;
@@ -48,9 +49,9 @@ abstract class CubicAsymmetricVertexBase extends CubicVertex {
 
   /// --------------------------------------------------------------------------
   /// InDistance field with key 80.
+  static const int inDistancePropertyKey = 80;
   static const double inDistanceInitialValue = 0;
   double _inDistance = inDistanceInitialValue;
-  static const int inDistancePropertyKey = 80;
 
   /// The in point's distance from the translation of the point.
   double get inDistance => _inDistance;
@@ -72,9 +73,9 @@ abstract class CubicAsymmetricVertexBase extends CubicVertex {
 
   /// --------------------------------------------------------------------------
   /// OutDistance field with key 81.
+  static const int outDistancePropertyKey = 81;
   static const double outDistanceInitialValue = 0;
   double _outDistance = outDistanceInitialValue;
-  static const int outDistancePropertyKey = 81;
 
   /// The out point's distance from the translation of the point.
   double get outDistance => _outDistance;
@@ -96,10 +97,12 @@ abstract class CubicAsymmetricVertexBase extends CubicVertex {
   void outDistanceChanged(double from, double to);
 
   @override
-  void copy(covariant CubicAsymmetricVertexBase source) {
+  void copy(Core source) {
     super.copy(source);
-    _rotation = source._rotation;
-    _inDistance = source._inDistance;
-    _outDistance = source._outDistance;
+    if (source is CubicAsymmetricVertexBase) {
+      _rotation = source._rotation;
+      _inDistance = source._inDistance;
+      _outDistance = source._outDistance;
+    }
   }
 }

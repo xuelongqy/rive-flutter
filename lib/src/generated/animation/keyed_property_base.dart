@@ -1,6 +1,6 @@
-/// Core automatically generated
-/// lib/src/generated/animation/keyed_property_base.dart.
-/// Do not modify manually.
+// Core automatically generated
+// lib/src/generated/animation/keyed_property_base.dart.
+// Do not modify manually.
 
 import 'package:rive/src/core/core.dart';
 
@@ -13,9 +13,9 @@ abstract class KeyedPropertyBase<T extends CoreContext> extends Core<T> {
 
   /// --------------------------------------------------------------------------
   /// PropertyKey field with key 53.
+  static const int propertyKeyPropertyKey = 53;
   static const int propertyKeyInitialValue = CoreContext.invalidPropertyKey;
   int _propertyKey = propertyKeyInitialValue;
-  static const int propertyKeyPropertyKey = 53;
 
   /// The property type that is keyed.
   int get propertyKey => _propertyKey;
@@ -37,7 +37,9 @@ abstract class KeyedPropertyBase<T extends CoreContext> extends Core<T> {
   void propertyKeyChanged(int from, int to);
 
   @override
-  void copy(covariant KeyedPropertyBase source) {
-    _propertyKey = source._propertyKey;
+  void copy(Core source) {
+    if (source is KeyedPropertyBase) {
+      _propertyKey = source._propertyKey;
+    }
   }
 }

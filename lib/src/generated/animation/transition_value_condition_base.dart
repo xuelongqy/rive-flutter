@@ -1,7 +1,8 @@
-/// Core automatically generated
-/// lib/src/generated/animation/transition_value_condition_base.dart.
-/// Do not modify manually.
+// Core automatically generated
+// lib/src/generated/animation/transition_value_condition_base.dart.
+// Do not modify manually.
 
+import 'package:rive/src/core/core.dart';
 import 'package:rive/src/rive_core/animation/transition_condition.dart';
 
 abstract class TransitionValueConditionBase extends TransitionCondition {
@@ -14,9 +15,9 @@ abstract class TransitionValueConditionBase extends TransitionCondition {
 
   /// --------------------------------------------------------------------------
   /// OpValue field with key 156.
+  static const int opValuePropertyKey = 156;
   static const int opValueInitialValue = 0;
   int _opValue = opValueInitialValue;
-  static const int opValuePropertyKey = 156;
 
   /// Integer representation of the StateMachineOp enum.
   int get opValue => _opValue;
@@ -37,8 +38,10 @@ abstract class TransitionValueConditionBase extends TransitionCondition {
   void opValueChanged(int from, int to);
 
   @override
-  void copy(covariant TransitionValueConditionBase source) {
+  void copy(Core source) {
     super.copy(source);
-    _opValue = source._opValue;
+    if (source is TransitionValueConditionBase) {
+      _opValue = source._opValue;
+    }
   }
 }

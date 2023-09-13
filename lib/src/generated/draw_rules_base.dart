@@ -1,5 +1,5 @@
-/// Core automatically generated lib/src/generated/draw_rules_base.dart.
-/// Do not modify manually.
+// Core automatically generated lib/src/generated/draw_rules_base.dart.
+// Do not modify manually.
 
 import 'package:rive/src/generated/component_base.dart';
 import 'package:rive/src/generated/container_component_base.dart';
@@ -18,9 +18,9 @@ abstract class DrawRulesBase extends ContainerComponent {
 
   /// --------------------------------------------------------------------------
   /// DrawTargetId field with key 121.
+  static const int drawTargetIdPropertyKey = 121;
   static const int drawTargetIdInitialValue = -1;
   int _drawTargetId = drawTargetIdInitialValue;
-  static const int drawTargetIdPropertyKey = 121;
 
   /// Id of the DrawTarget that is currently active for this set of rules.
   int get drawTargetId => _drawTargetId;
@@ -42,8 +42,10 @@ abstract class DrawRulesBase extends ContainerComponent {
   void drawTargetIdChanged(int from, int to);
 
   @override
-  void copy(covariant DrawRulesBase source) {
+  void copy(Core source) {
     super.copy(source);
-    _drawTargetId = source._drawTargetId;
+    if (source is DrawRulesBase) {
+      _drawTargetId = source._drawTargetId;
+    }
   }
 }

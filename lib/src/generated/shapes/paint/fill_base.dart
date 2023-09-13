@@ -1,6 +1,7 @@
-/// Core automatically generated lib/src/generated/shapes/paint/fill_base.dart.
-/// Do not modify manually.
+// Core automatically generated lib/src/generated/shapes/paint/fill_base.dart.
+// Do not modify manually.
 
+import 'package:rive/src/core/core.dart';
 import 'package:rive/src/generated/component_base.dart';
 import 'package:rive/src/generated/container_component_base.dart';
 import 'package:rive/src/rive_core/shapes/paint/shape_paint.dart';
@@ -19,9 +20,9 @@ abstract class FillBase extends ShapePaint {
 
   /// --------------------------------------------------------------------------
   /// FillRule field with key 40.
+  static const int fillRulePropertyKey = 40;
   static const int fillRuleInitialValue = 0;
   int _fillRule = fillRuleInitialValue;
-  static const int fillRulePropertyKey = 40;
   int get fillRule => _fillRule;
 
   /// Change the [_fillRule] field value.
@@ -40,8 +41,10 @@ abstract class FillBase extends ShapePaint {
   void fillRuleChanged(int from, int to);
 
   @override
-  void copy(covariant FillBase source) {
+  void copy(Core source) {
     super.copy(source);
-    _fillRule = source._fillRule;
+    if (source is FillBase) {
+      _fillRule = source._fillRule;
+    }
   }
 }

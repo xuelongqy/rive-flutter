@@ -1,7 +1,8 @@
-/// Core automatically generated
-/// lib/src/generated/constraints/transform_space_constraint_base.dart.
-/// Do not modify manually.
+// Core automatically generated
+// lib/src/generated/constraints/transform_space_constraint_base.dart.
+// Do not modify manually.
 
+import 'package:rive/src/core/core.dart';
 import 'package:rive/src/generated/component_base.dart';
 import 'package:rive/src/generated/constraints/constraint_base.dart';
 import 'package:rive/src/rive_core/constraints/targeted_constraint.dart';
@@ -20,9 +21,9 @@ abstract class TransformSpaceConstraintBase extends TargetedConstraint {
 
   /// --------------------------------------------------------------------------
   /// SourceSpaceValue field with key 179.
+  static const int sourceSpaceValuePropertyKey = 179;
   static const int sourceSpaceValueInitialValue = 0;
   int _sourceSpaceValue = sourceSpaceValueInitialValue;
-  static const int sourceSpaceValuePropertyKey = 179;
 
   /// The source transform space.
   int get sourceSpaceValue => _sourceSpaceValue;
@@ -45,9 +46,9 @@ abstract class TransformSpaceConstraintBase extends TargetedConstraint {
 
   /// --------------------------------------------------------------------------
   /// DestSpaceValue field with key 180.
+  static const int destSpaceValuePropertyKey = 180;
   static const int destSpaceValueInitialValue = 0;
   int _destSpaceValue = destSpaceValueInitialValue;
-  static const int destSpaceValuePropertyKey = 180;
 
   /// The destination transform space.
   int get destSpaceValue => _destSpaceValue;
@@ -69,9 +70,11 @@ abstract class TransformSpaceConstraintBase extends TargetedConstraint {
   void destSpaceValueChanged(int from, int to);
 
   @override
-  void copy(covariant TransformSpaceConstraintBase source) {
+  void copy(Core source) {
     super.copy(source);
-    _sourceSpaceValue = source._sourceSpaceValue;
-    _destSpaceValue = source._destSpaceValue;
+    if (source is TransformSpaceConstraintBase) {
+      _sourceSpaceValue = source._sourceSpaceValue;
+      _destSpaceValue = source._destSpaceValue;
+    }
   }
 }

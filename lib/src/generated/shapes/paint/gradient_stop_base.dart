@@ -1,7 +1,8 @@
-/// Core automatically generated
-/// lib/src/generated/shapes/paint/gradient_stop_base.dart.
-/// Do not modify manually.
+// Core automatically generated
+// lib/src/generated/shapes/paint/gradient_stop_base.dart.
+// Do not modify manually.
 
+import 'package:rive/src/core/core.dart';
 import 'package:rive/src/rive_core/component.dart';
 
 abstract class GradientStopBase extends Component {
@@ -13,9 +14,9 @@ abstract class GradientStopBase extends Component {
 
   /// --------------------------------------------------------------------------
   /// ColorValue field with key 38.
+  static const int colorValuePropertyKey = 38;
   static const int colorValueInitialValue = 0xFFFFFFFF;
   int _colorValue = colorValueInitialValue;
-  static const int colorValuePropertyKey = 38;
   int get colorValue => _colorValue;
 
   /// Change the [_colorValue] field value.
@@ -35,9 +36,9 @@ abstract class GradientStopBase extends Component {
 
   /// --------------------------------------------------------------------------
   /// Position field with key 39.
+  static const int positionPropertyKey = 39;
   static const double positionInitialValue = 0;
   double _position = positionInitialValue;
-  static const int positionPropertyKey = 39;
   double get position => _position;
 
   /// Change the [_position] field value.
@@ -56,9 +57,11 @@ abstract class GradientStopBase extends Component {
   void positionChanged(double from, double to);
 
   @override
-  void copy(covariant GradientStopBase source) {
+  void copy(Core source) {
     super.copy(source);
-    _colorValue = source._colorValue;
-    _position = source._position;
+    if (source is GradientStopBase) {
+      _colorValue = source._colorValue;
+      _position = source._position;
+    }
   }
 }

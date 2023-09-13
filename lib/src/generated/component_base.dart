@@ -1,5 +1,5 @@
-/// Core automatically generated lib/src/generated/component_base.dart.
-/// Do not modify manually.
+// Core automatically generated lib/src/generated/component_base.dart.
+// Do not modify manually.
 
 import 'package:rive/src/core/core.dart';
 
@@ -12,9 +12,9 @@ abstract class ComponentBase<T extends CoreContext> extends Core<T> {
 
   /// --------------------------------------------------------------------------
   /// Name field with key 4.
+  static const int namePropertyKey = 4;
   static const String nameInitialValue = '';
   String _name = nameInitialValue;
-  static const int namePropertyKey = 4;
 
   /// Non-unique identifier, used to give friendly names to elements in the
   /// hierarchy. Runtimes provide an API for finding components by this [name].
@@ -37,9 +37,9 @@ abstract class ComponentBase<T extends CoreContext> extends Core<T> {
 
   /// --------------------------------------------------------------------------
   /// ParentId field with key 5.
+  static const int parentIdPropertyKey = 5;
   static const int parentIdInitialValue = 0;
   int _parentId = parentIdInitialValue;
-  static const int parentIdPropertyKey = 5;
 
   /// Identifier used to track parent ContainerComponent.
   int get parentId => _parentId;
@@ -60,8 +60,10 @@ abstract class ComponentBase<T extends CoreContext> extends Core<T> {
   void parentIdChanged(int from, int to);
 
   @override
-  void copy(covariant ComponentBase source) {
-    _name = source._name;
-    _parentId = source._parentId;
+  void copy(Core source) {
+    if (source is ComponentBase) {
+      _name = source._name;
+      _parentId = source._parentId;
+    }
   }
 }

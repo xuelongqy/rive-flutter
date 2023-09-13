@@ -1,7 +1,8 @@
-/// Core automatically generated
-/// lib/src/generated/constraints/transform_component_constraint_y_base.dart.
-/// Do not modify manually.
+// Core automatically generated
+// lib/src/generated/constraints/transform_component_constraint_y_base.dart.
+// Do not modify manually.
 
+import 'package:rive/src/core/core.dart';
 import 'package:rive/src/generated/component_base.dart';
 import 'package:rive/src/generated/constraints/constraint_base.dart';
 import 'package:rive/src/generated/constraints/targeted_constraint_base.dart';
@@ -25,9 +26,9 @@ abstract class TransformComponentConstraintYBase
 
   /// --------------------------------------------------------------------------
   /// CopyFactorY field with key 185.
+  static const int copyFactorYPropertyKey = 185;
   static const double copyFactorYInitialValue = 1;
   double _copyFactorY = copyFactorYInitialValue;
-  static const int copyFactorYPropertyKey = 185;
 
   /// Copy factor.
   double get copyFactorY => _copyFactorY;
@@ -50,9 +51,9 @@ abstract class TransformComponentConstraintYBase
 
   /// --------------------------------------------------------------------------
   /// MinValueY field with key 186.
+  static const int minValueYPropertyKey = 186;
   static const double minValueYInitialValue = 0;
   double _minValueY = minValueYInitialValue;
-  static const int minValueYPropertyKey = 186;
 
   /// Minimum value.
   double get minValueY => _minValueY;
@@ -74,9 +75,9 @@ abstract class TransformComponentConstraintYBase
 
   /// --------------------------------------------------------------------------
   /// MaxValueY field with key 187.
+  static const int maxValueYPropertyKey = 187;
   static const double maxValueYInitialValue = 0;
   double _maxValueY = maxValueYInitialValue;
-  static const int maxValueYPropertyKey = 187;
 
   /// Maximum value.
   double get maxValueY => _maxValueY;
@@ -98,9 +99,9 @@ abstract class TransformComponentConstraintYBase
 
   /// --------------------------------------------------------------------------
   /// DoesCopyY field with key 192.
+  static const int doesCopyYPropertyKey = 192;
   static const bool doesCopyYInitialValue = true;
   bool _doesCopyY = doesCopyYInitialValue;
-  static const int doesCopyYPropertyKey = 192;
 
   /// Whether the Y component is copied.
   bool get doesCopyY => _doesCopyY;
@@ -122,9 +123,9 @@ abstract class TransformComponentConstraintYBase
 
   /// --------------------------------------------------------------------------
   /// MinY field with key 193.
+  static const int minYPropertyKey = 193;
   static const bool minYInitialValue = false;
   bool _minY = minYInitialValue;
-  static const int minYPropertyKey = 193;
 
   /// Whether min Y is used.
   bool get minY => _minY;
@@ -146,9 +147,9 @@ abstract class TransformComponentConstraintYBase
 
   /// --------------------------------------------------------------------------
   /// MaxY field with key 194.
+  static const int maxYPropertyKey = 194;
   static const bool maxYInitialValue = false;
   bool _maxY = maxYInitialValue;
-  static const int maxYPropertyKey = 194;
 
   /// Whether max Y is used.
   bool get maxY => _maxY;
@@ -169,13 +170,15 @@ abstract class TransformComponentConstraintYBase
   void maxYChanged(bool from, bool to);
 
   @override
-  void copy(covariant TransformComponentConstraintYBase source) {
+  void copy(Core source) {
     super.copy(source);
-    _copyFactorY = source._copyFactorY;
-    _minValueY = source._minValueY;
-    _maxValueY = source._maxValueY;
-    _doesCopyY = source._doesCopyY;
-    _minY = source._minY;
-    _maxY = source._maxY;
+    if (source is TransformComponentConstraintYBase) {
+      _copyFactorY = source._copyFactorY;
+      _minValueY = source._minValueY;
+      _maxValueY = source._maxValueY;
+      _doesCopyY = source._doesCopyY;
+      _minY = source._minY;
+      _maxY = source._maxY;
+    }
   }
 }

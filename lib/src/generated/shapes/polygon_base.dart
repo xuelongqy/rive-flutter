@@ -1,6 +1,7 @@
-/// Core automatically generated lib/src/generated/shapes/polygon_base.dart.
-/// Do not modify manually.
+// Core automatically generated lib/src/generated/shapes/polygon_base.dart.
+// Do not modify manually.
 
+import 'package:rive/src/core/core.dart';
 import 'package:rive/src/generated/component_base.dart';
 import 'package:rive/src/generated/container_component_base.dart';
 import 'package:rive/src/generated/node_base.dart';
@@ -27,9 +28,9 @@ abstract class PolygonBase extends ParametricPath {
 
   /// --------------------------------------------------------------------------
   /// Points field with key 125.
+  static const int pointsPropertyKey = 125;
   static const int pointsInitialValue = 5;
   int _points = pointsInitialValue;
-  static const int pointsPropertyKey = 125;
 
   /// The number of points for the polygon.
   int get points => _points;
@@ -51,9 +52,9 @@ abstract class PolygonBase extends ParametricPath {
 
   /// --------------------------------------------------------------------------
   /// CornerRadius field with key 126.
+  static const int cornerRadiusPropertyKey = 126;
   static const double cornerRadiusInitialValue = 0;
   double _cornerRadius = cornerRadiusInitialValue;
-  static const int cornerRadiusPropertyKey = 126;
 
   /// The corner radius.
   double get cornerRadius => _cornerRadius;
@@ -75,9 +76,11 @@ abstract class PolygonBase extends ParametricPath {
   void cornerRadiusChanged(double from, double to);
 
   @override
-  void copy(covariant PolygonBase source) {
+  void copy(Core source) {
     super.copy(source);
-    _points = source._points;
-    _cornerRadius = source._cornerRadius;
+    if (source is PolygonBase) {
+      _points = source._points;
+      _cornerRadius = source._cornerRadius;
+    }
   }
 }

@@ -1,7 +1,8 @@
-/// Core automatically generated
-/// lib/src/generated/animation/listener_bool_change_base.dart.
-/// Do not modify manually.
+// Core automatically generated
+// lib/src/generated/animation/listener_bool_change_base.dart.
+// Do not modify manually.
 
+import 'package:rive/src/core/core.dart';
 import 'package:rive/src/generated/animation/listener_action_base.dart';
 import 'package:rive/src/rive_core/animation/listener_input_change.dart';
 
@@ -18,9 +19,9 @@ abstract class ListenerBoolChangeBase extends ListenerInputChange {
 
   /// --------------------------------------------------------------------------
   /// Value field with key 228.
+  static const int valuePropertyKey = 228;
   static const int valueInitialValue = 1;
   int _value = valueInitialValue;
-  static const int valuePropertyKey = 228;
 
   /// Value to set the input to when the listener occurs.
   int get value => _value;
@@ -41,8 +42,10 @@ abstract class ListenerBoolChangeBase extends ListenerInputChange {
   void valueChanged(int from, int to);
 
   @override
-  void copy(covariant ListenerBoolChangeBase source) {
+  void copy(Core source) {
     super.copy(source);
-    _value = source._value;
+    if (source is ListenerBoolChangeBase) {
+      _value = source._value;
+    }
   }
 }

@@ -1,6 +1,7 @@
-/// Core automatically generated lib/src/generated/draw_target_base.dart.
-/// Do not modify manually.
+// Core automatically generated lib/src/generated/draw_target_base.dart.
+// Do not modify manually.
 
+import 'package:rive/src/core/core.dart';
 import 'package:rive/src/rive_core/component.dart';
 
 abstract class DrawTargetBase extends Component {
@@ -12,9 +13,9 @@ abstract class DrawTargetBase extends Component {
 
   /// --------------------------------------------------------------------------
   /// DrawableId field with key 119.
+  static const int drawableIdPropertyKey = 119;
   static const int drawableIdInitialValue = -1;
   int _drawableId = drawableIdInitialValue;
-  static const int drawableIdPropertyKey = 119;
 
   /// Id of the drawable this target references.
   int get drawableId => _drawableId;
@@ -36,9 +37,9 @@ abstract class DrawTargetBase extends Component {
 
   /// --------------------------------------------------------------------------
   /// PlacementValue field with key 120.
+  static const int placementValuePropertyKey = 120;
   static const int placementValueInitialValue = 0;
   int _placementValue = placementValueInitialValue;
-  static const int placementValuePropertyKey = 120;
 
   /// Backing enum value for the Placement.
   int get placementValue => _placementValue;
@@ -60,9 +61,11 @@ abstract class DrawTargetBase extends Component {
   void placementValueChanged(int from, int to);
 
   @override
-  void copy(covariant DrawTargetBase source) {
+  void copy(Core source) {
     super.copy(source);
-    _drawableId = source._drawableId;
-    _placementValue = source._placementValue;
+    if (source is DrawTargetBase) {
+      _drawableId = source._drawableId;
+      _placementValue = source._placementValue;
+    }
   }
 }

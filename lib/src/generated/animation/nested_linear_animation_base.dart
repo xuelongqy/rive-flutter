@@ -1,7 +1,8 @@
-/// Core automatically generated
-/// lib/src/generated/animation/nested_linear_animation_base.dart.
-/// Do not modify manually.
+// Core automatically generated
+// lib/src/generated/animation/nested_linear_animation_base.dart.
+// Do not modify manually.
 
+import 'package:rive/src/core/core.dart';
 import 'package:rive/src/generated/component_base.dart';
 import 'package:rive/src/generated/container_component_base.dart';
 import 'package:rive/src/rive_core/animation/linear_animation.dart';
@@ -22,9 +23,9 @@ abstract class NestedLinearAnimationBase
 
   /// --------------------------------------------------------------------------
   /// Mix field with key 200.
+  static const int mixPropertyKey = 200;
   static const double mixInitialValue = 1;
   double _mix = mixInitialValue;
-  static const int mixPropertyKey = 200;
 
   /// Value to mix the animation in.
   double get mix => _mix;
@@ -45,8 +46,10 @@ abstract class NestedLinearAnimationBase
   void mixChanged(double from, double to);
 
   @override
-  void copy(covariant NestedLinearAnimationBase source) {
+  void copy(Core source) {
     super.copy(source);
-    _mix = source._mix;
+    if (source is NestedLinearAnimationBase) {
+      _mix = source._mix;
+    }
   }
 }

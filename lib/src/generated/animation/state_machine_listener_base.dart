@@ -1,7 +1,8 @@
-/// Core automatically generated
-/// lib/src/generated/animation/state_machine_listener_base.dart.
-/// Do not modify manually.
+// Core automatically generated
+// lib/src/generated/animation/state_machine_listener_base.dart.
+// Do not modify manually.
 
+import 'package:rive/src/core/core.dart';
 import 'package:rive/src/rive_core/animation/state_machine_component.dart';
 
 abstract class StateMachineListenerBase extends StateMachineComponent {
@@ -14,9 +15,9 @@ abstract class StateMachineListenerBase extends StateMachineComponent {
 
   /// --------------------------------------------------------------------------
   /// TargetId field with key 224.
+  static const int targetIdPropertyKey = 224;
   static const int targetIdInitialValue = 0;
   int _targetId = targetIdInitialValue;
-  static const int targetIdPropertyKey = 224;
 
   /// Identifier used to track the object use as a target fo this listener.
   int get targetId => _targetId;
@@ -38,9 +39,9 @@ abstract class StateMachineListenerBase extends StateMachineComponent {
 
   /// --------------------------------------------------------------------------
   /// ListenerTypeValue field with key 225.
+  static const int listenerTypeValuePropertyKey = 225;
   static const int listenerTypeValueInitialValue = 0;
   int _listenerTypeValue = listenerTypeValueInitialValue;
-  static const int listenerTypeValuePropertyKey = 225;
 
   /// Listener type (hover, click, etc).
   int get listenerTypeValue => _listenerTypeValue;
@@ -62,9 +63,11 @@ abstract class StateMachineListenerBase extends StateMachineComponent {
   void listenerTypeValueChanged(int from, int to);
 
   @override
-  void copy(covariant StateMachineListenerBase source) {
+  void copy(Core source) {
     super.copy(source);
-    _targetId = source._targetId;
-    _listenerTypeValue = source._listenerTypeValue;
+    if (source is StateMachineListenerBase) {
+      _targetId = source._targetId;
+      _listenerTypeValue = source._listenerTypeValue;
+    }
   }
 }

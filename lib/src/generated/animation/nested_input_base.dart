@@ -1,7 +1,8 @@
-/// Core automatically generated
-/// lib/src/generated/animation/nested_input_base.dart.
-/// Do not modify manually.
+// Core automatically generated
+// lib/src/generated/animation/nested_input_base.dart.
+// Do not modify manually.
 
+import 'package:rive/src/core/core.dart';
 import 'package:rive/src/rive_core/component.dart';
 
 abstract class NestedInputBase extends Component {
@@ -13,9 +14,9 @@ abstract class NestedInputBase extends Component {
 
   /// --------------------------------------------------------------------------
   /// InputId field with key 237.
+  static const int inputIdPropertyKey = 237;
   static const int inputIdInitialValue = -1;
   int _inputId = inputIdInitialValue;
-  static const int inputIdPropertyKey = 237;
 
   /// Identifier used to track the actual backing state machine input.
   int get inputId => _inputId;
@@ -36,8 +37,10 @@ abstract class NestedInputBase extends Component {
   void inputIdChanged(int from, int to);
 
   @override
-  void copy(covariant NestedInputBase source) {
+  void copy(Core source) {
     super.copy(source);
-    _inputId = source._inputId;
+    if (source is NestedInputBase) {
+      _inputId = source._inputId;
+    }
   }
 }

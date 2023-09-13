@@ -1,6 +1,7 @@
-/// Core automatically generated lib/src/generated/bones/root_bone_base.dart.
-/// Do not modify manually.
+// Core automatically generated lib/src/generated/bones/root_bone_base.dart.
+// Do not modify manually.
 
+import 'package:rive/src/core/core.dart';
 import 'package:rive/src/generated/bones/skeletal_component_base.dart';
 import 'package:rive/src/generated/component_base.dart';
 import 'package:rive/src/generated/container_component_base.dart';
@@ -25,9 +26,9 @@ abstract class RootBoneBase extends Bone {
 
   /// --------------------------------------------------------------------------
   /// X field with key 90.
+  static const int xPropertyKey = 90;
   static const double xInitialValue = 0;
   double _x = xInitialValue;
-  static const int xPropertyKey = 90;
   @override
   double get x => _x;
 
@@ -49,9 +50,9 @@ abstract class RootBoneBase extends Bone {
 
   /// --------------------------------------------------------------------------
   /// Y field with key 91.
+  static const int yPropertyKey = 91;
   static const double yInitialValue = 0;
   double _y = yInitialValue;
-  static const int yPropertyKey = 91;
   @override
   double get y => _y;
 
@@ -72,9 +73,11 @@ abstract class RootBoneBase extends Bone {
   void yChanged(double from, double to);
 
   @override
-  void copy(covariant RootBoneBase source) {
+  void copy(Core source) {
     super.copy(source);
-    _x = source._x;
-    _y = source._y;
+    if (source is RootBoneBase) {
+      _x = source._x;
+      _y = source._y;
+    }
   }
 }

@@ -12,6 +12,7 @@ import 'package:rive/src/rive_core/draw_rules.dart';
 import 'package:rive/src/rive_core/draw_target.dart';
 import 'package:rive/src/rive_core/drawable.dart';
 import 'package:rive/src/rive_core/event.dart';
+import 'package:rive/src/rive_core/joystick.dart';
 import 'package:rive/src/rive_core/nested_artboard.dart';
 import 'package:rive/src/rive_core/rive_animation_controller.dart';
 import 'package:rive/src/rive_core/shapes/paint/shape_paint_mutator.dart';
@@ -93,9 +94,6 @@ class Artboard extends ArtboardBase with ShapePaintContainer {
   Iterable<StateMachine> get stateMachines =>
       _animations.whereType<StateMachine>();
 
-  /// Does this artboard have animations?
-  bool get hasAnimations => _animations.isNotEmpty;
-
   int _dirtDepth = 0;
 
   /// Iterate each component and call callback for it.
@@ -119,6 +117,8 @@ class Artboard extends ArtboardBase with ShapePaintContainer {
     return Vec2D.fromValues(x + width * originX, y + height * originY);
   }
 
+  Vec2D get origin => Vec2D.fromValues(width * originX, height * originY);
+
   /// Walk the dependency tree and update components in order. Returns true if
   /// any component updated.
   bool updateComponents() {
@@ -141,10 +141,12 @@ class Artboard extends ArtboardBase with ShapePaintContainer {
           Component component = _dependencyOrder[i];
           _dirtDepth = i;
           int d = component.dirt;
-          if (d == 0) {
+
+          if (d == 0 || (d & ComponentDirt.collapsed) != 0) {
             continue;
           }
-          component.dirt = 0;
+
+          component.dirt &= ComponentDirt.collapsed;
           component.update(d);
           if (_dirtDepth < i) {
             break;
@@ -160,6 +162,32 @@ class Artboard extends ArtboardBase with ShapePaintContainer {
   final Set<NestedArtboard> _activeNestedArtboards = {};
   Iterable<NestedArtboard> get activeNestedArtboards => _activeNestedArtboards;
 
+  final List<Joystick> _joysticks = [];
+  Iterable<Joystick> get joysticks => _joysticks;
+
+  bool canPreApplyJoysticks() {
+    if (_joysticks.isEmpty) {
+      return false;
+    }
+    if (_joysticks.any((joystick) => joystick.isComplex)) {
+      return false;
+    }
+    return true;
+  }
+
+  bool applyJoysticks() {
+    if (_joysticks.isEmpty) {
+      return false;
+    }
+    for (final joystick in _joysticks) {
+      if (joystick.isComplex) {
+        updateComponents();
+      }
+      joystick.apply(context);
+    }
+    return true;
+  }
+
   /// Update any dirty components in this artboard.
   bool advance(double elapsedSeconds, {bool nested = false}) {
     bool didUpdate = false;
@@ -169,8 +197,25 @@ class Artboard extends ArtboardBase with ShapePaintContainer {
         didUpdate = true;
       }
     }
+
+    // Joysticks can be applied before updating components if none of the
+    // joysticks have "external" control. If they are controlled/moved by some
+    // other component then they need to apply after the update cycle, which is
+    // less efficient.
+    var canApplyJoysticksEarly = canPreApplyJoysticks();
+    if (canApplyJoysticksEarly) {
+      applyJoysticks();
+    }
+
     if (updateComponents() || didUpdate) {
       didUpdate = true;
+    }
+
+    // If joysticks applied, run the update again for the animation changes.
+    if (!canApplyJoysticksEarly && applyJoysticks()) {
+      if (updateComponents()) {
+        didUpdate = true;
+      }
     }
 
     if (nested) {
@@ -209,13 +254,13 @@ class Artboard extends ArtboardBase with ShapePaintContainer {
   bool resolveArtboard() => true;
 
   /// Sort the DAG for resolution in order of dependencies such that dependent
-  /// compnents process after their dependencies.
+  /// components process after their dependencies.
   void sortDependencies() {
-    var optimistic = DependencySorter<Component>();
+    var optimistic = DependencyGraphNodeSorter<Component>();
     var order = optimistic.sort(this);
     if (order.isEmpty) {
       // cycle detected, use a more robust solver
-      var robust = TarjansDependencySorter<Component>();
+      var robust = TarjansDependencyGraphNodeSorter<Component>();
       order = robust.sort(this);
     }
 
@@ -273,8 +318,13 @@ class Artboard extends ArtboardBase with ShapePaintContainer {
     if (!_components.add(component)) {
       return;
     }
-    if (component is NestedArtboard) {
-      _activeNestedArtboards.add(component);
+    switch (component.coreType) {
+      case NestedArtboardBase.typeKey:
+        _activeNestedArtboards.add(component as NestedArtboard);
+        break;
+      case JoystickBase.typeKey:
+        _joysticks.add(component as Joystick);
+        break;
     }
   }
 
@@ -282,8 +332,13 @@ class Artboard extends ArtboardBase with ShapePaintContainer {
   /// components.
   void removeComponent(Component component) {
     _components.remove(component);
-    if (component is NestedArtboard) {
-      _activeNestedArtboards.remove(component);
+    switch (component.coreType) {
+      case NestedArtboardBase.typeKey:
+        _activeNestedArtboards.remove(component as NestedArtboard);
+        break;
+      case JoystickBase.typeKey:
+        _joysticks.remove(component as Joystick);
+        break;
     }
   }
 
@@ -297,7 +352,9 @@ class Artboard extends ArtboardBase with ShapePaintContainer {
   }
 
   /// Draw the drawable components in this artboard.
-  void draw(Canvas canvas) {
+  void draw(
+    Canvas canvas,
+  ) {
     canvas.save();
     if (clip) {
       if (_frameOrigin) {
@@ -320,6 +377,7 @@ class Artboard extends ArtboardBase with ShapePaintContainer {
     if (_frameOrigin) {
       canvas.translate(width * originX, height * originY);
     }
+
     for (final fill in fills) {
       fill.draw(canvas, path);
     }
@@ -327,11 +385,13 @@ class Artboard extends ArtboardBase with ShapePaintContainer {
     for (var drawable = _firstDrawable;
         drawable != null;
         drawable = drawable.prev) {
-      if (drawable.isHidden) {
+      if (drawable.isHidden || drawable.renderOpacity == 0) {
         continue;
       }
+
       drawable.draw(canvas);
     }
+
     canvas.restore();
   }
 
@@ -460,7 +520,7 @@ class Artboard extends ArtboardBase with ShapePaintContainer {
       }
     }
 
-    var sorter = DependencySorter<Component>();
+    var sorter = DependencyGraphNodeSorter<Component>();
 
     _sortedDrawRules = sorter.sort(root).cast<DrawTarget>().skip(1).toList();
 
@@ -543,7 +603,9 @@ class Artboard extends ArtboardBase with ShapePaintContainer {
   }
 
   @override
-  void clipChanged(bool from, bool to) => addDirt(ComponentDirt.paint);
+  void clipChanged(bool from, bool to) {
+    addDirt(ComponentDirt.paint);
+  }
 
   @override
   bool import(ImportStack stack) {

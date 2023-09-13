@@ -1,7 +1,6 @@
-/// Core automatically generated lib/src/generated/shapes/mesh_base.dart.
-/// Do not modify manually.
+// Core automatically generated lib/src/generated/shapes/mesh_base.dart.
+// Do not modify manually.
 
-import 'package:rive/src/core/core.dart';
 import 'package:rive/src/generated/component_base.dart';
 import 'package:rive/src/generated/container_component_base.dart';
 import 'package:rive/src/rive_core/container_component.dart';
@@ -16,9 +15,9 @@ abstract class MeshBase extends ContainerComponent {
 
   /// --------------------------------------------------------------------------
   /// TriangleIndexBytes field with key 223.
+  static const int triangleIndexBytesPropertyKey = 223;
   static final Uint8List triangleIndexBytesInitialValue = Uint8List(0);
   Uint8List _triangleIndexBytes = triangleIndexBytesInitialValue;
-  static const int triangleIndexBytesPropertyKey = 223;
 
   /// Byte data for the triangle indices.
   Uint8List get triangleIndexBytes => _triangleIndexBytes;
@@ -40,8 +39,10 @@ abstract class MeshBase extends ContainerComponent {
   void triangleIndexBytesChanged(Uint8List from, Uint8List to);
 
   @override
-  void copy(covariant MeshBase source) {
+  void copy(Core source) {
     super.copy(source);
-    _triangleIndexBytes = source._triangleIndexBytes;
+    if (source is MeshBase) {
+      _triangleIndexBytes = source._triangleIndexBytes;
+    }
   }
 }

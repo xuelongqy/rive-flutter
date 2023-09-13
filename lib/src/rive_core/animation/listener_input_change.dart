@@ -42,7 +42,7 @@ abstract class ListenerInputChange extends ListenerInputChangeBase {
     }
     if (inputId >= 0 && inputId < stateMachineImporter.machine.inputs.length) {
       var found = stateMachineImporter.machine.inputs[inputId];
-      _input = found;
+      _input = found as StateMachineInput;
       inputId = found.id;
     }
 

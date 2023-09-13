@@ -1,5 +1,5 @@
-/// Core automatically generated lib/src/generated/assets/asset_base.dart.
-/// Do not modify manually.
+// Core automatically generated lib/src/generated/assets/asset_base.dart.
+// Do not modify manually.
 
 import 'package:rive/src/core/core.dart';
 
@@ -12,9 +12,9 @@ abstract class AssetBase<T extends CoreContext> extends Core<T> {
 
   /// --------------------------------------------------------------------------
   /// Name field with key 203.
+  static const int namePropertyKey = 203;
   static const String nameInitialValue = '';
   String _name = nameInitialValue;
-  static const int namePropertyKey = 203;
 
   /// Name of the asset
   String get name => _name;
@@ -35,7 +35,9 @@ abstract class AssetBase<T extends CoreContext> extends Core<T> {
   void nameChanged(String from, String to);
 
   @override
-  void copy(covariant AssetBase source) {
-    _name = source._name;
+  void copy(Core source) {
+    if (source is AssetBase) {
+      _name = source._name;
+    }
   }
 }

@@ -1,5 +1,5 @@
-/// Core automatically generated lib/src/generated/shapes/vertex_base.dart.
-/// Do not modify manually.
+// Core automatically generated lib/src/generated/shapes/vertex_base.dart.
+// Do not modify manually.
 
 import 'package:rive/src/generated/component_base.dart';
 import 'package:rive/src/generated/container_component_base.dart';
@@ -18,9 +18,9 @@ abstract class VertexBase extends ContainerComponent {
 
   /// --------------------------------------------------------------------------
   /// X field with key 24.
+  static const int xPropertyKey = 24;
   static const double xInitialValue = 0;
   double _x = xInitialValue;
-  static const int xPropertyKey = 24;
 
   /// X value for the translation of the vertex.
   double get x => _x;
@@ -42,9 +42,9 @@ abstract class VertexBase extends ContainerComponent {
 
   /// --------------------------------------------------------------------------
   /// Y field with key 25.
+  static const int yPropertyKey = 25;
   static const double yInitialValue = 0;
   double _y = yInitialValue;
-  static const int yPropertyKey = 25;
 
   /// Y value for the translation of the vertex.
   double get y => _y;
@@ -65,9 +65,11 @@ abstract class VertexBase extends ContainerComponent {
   void yChanged(double from, double to);
 
   @override
-  void copy(covariant VertexBase source) {
+  void copy(Core source) {
     super.copy(source);
-    _x = source._x;
-    _y = source._y;
+    if (source is VertexBase) {
+      _x = source._x;
+      _y = source._y;
+    }
   }
 }

@@ -1,7 +1,8 @@
-/// Core automatically generated
-/// lib/src/generated/shapes/cubic_mirrored_vertex_base.dart.
-/// Do not modify manually.
+// Core automatically generated
+// lib/src/generated/shapes/cubic_mirrored_vertex_base.dart.
+// Do not modify manually.
 
+import 'package:rive/src/core/core.dart';
 import 'package:rive/src/generated/component_base.dart';
 import 'package:rive/src/generated/container_component_base.dart';
 import 'package:rive/src/generated/shapes/path_vertex_base.dart';
@@ -24,9 +25,9 @@ abstract class CubicMirroredVertexBase extends CubicVertex {
 
   /// --------------------------------------------------------------------------
   /// Rotation field with key 82.
+  static const int rotationPropertyKey = 82;
   static const double rotationInitialValue = 0;
   double _rotation = rotationInitialValue;
-  static const int rotationPropertyKey = 82;
 
   /// The control points' angle.
   double get rotation => _rotation;
@@ -48,9 +49,9 @@ abstract class CubicMirroredVertexBase extends CubicVertex {
 
   /// --------------------------------------------------------------------------
   /// Distance field with key 83.
+  static const int distancePropertyKey = 83;
   static const double distanceInitialValue = 0;
   double _distance = distanceInitialValue;
-  static const int distancePropertyKey = 83;
 
   /// The control points' distance from the translation of the point.
   double get distance => _distance;
@@ -71,9 +72,11 @@ abstract class CubicMirroredVertexBase extends CubicVertex {
   void distanceChanged(double from, double to);
 
   @override
-  void copy(covariant CubicMirroredVertexBase source) {
+  void copy(Core source) {
     super.copy(source);
-    _rotation = source._rotation;
-    _distance = source._distance;
+    if (source is CubicMirroredVertexBase) {
+      _rotation = source._rotation;
+      _distance = source._distance;
+    }
   }
 }

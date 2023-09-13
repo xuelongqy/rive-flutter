@@ -1,5 +1,5 @@
-/// Core automatically generated lib/src/generated/nested_animation_base.dart.
-/// Do not modify manually.
+// Core automatically generated lib/src/generated/nested_animation_base.dart.
+// Do not modify manually.
 
 import 'package:rive/src/generated/component_base.dart';
 import 'package:rive/src/generated/container_component_base.dart';
@@ -18,9 +18,9 @@ abstract class NestedAnimationBase extends ContainerComponent {
 
   /// --------------------------------------------------------------------------
   /// AnimationId field with key 198.
+  static const int animationIdPropertyKey = 198;
   static const int animationIdInitialValue = -1;
   int _animationId = animationIdInitialValue;
-  static const int animationIdPropertyKey = 198;
 
   /// Identifier used to track the animation in the nested artboard.
   int get animationId => _animationId;
@@ -42,8 +42,10 @@ abstract class NestedAnimationBase extends ContainerComponent {
   void animationIdChanged(int from, int to);
 
   @override
-  void copy(covariant NestedAnimationBase source) {
+  void copy(Core source) {
     super.copy(source);
-    _animationId = source._animationId;
+    if (source is NestedAnimationBase) {
+      _animationId = source._animationId;
+    }
   }
 }

@@ -1,7 +1,8 @@
-/// Core automatically generated
-/// lib/src/generated/shapes/paint/solid_color_base.dart.
-/// Do not modify manually.
+// Core automatically generated
+// lib/src/generated/shapes/paint/solid_color_base.dart.
+// Do not modify manually.
 
+import 'package:rive/src/core/core.dart';
 import 'package:rive/src/rive_core/component.dart';
 
 abstract class SolidColorBase extends Component {
@@ -13,9 +14,9 @@ abstract class SolidColorBase extends Component {
 
   /// --------------------------------------------------------------------------
   /// ColorValue field with key 37.
+  static const int colorValuePropertyKey = 37;
   static const int colorValueInitialValue = 0xFF747474;
   int _colorValue = colorValueInitialValue;
-  static const int colorValuePropertyKey = 37;
   int get colorValue => _colorValue;
 
   /// Change the [_colorValue] field value.
@@ -34,8 +35,10 @@ abstract class SolidColorBase extends Component {
   void colorValueChanged(int from, int to);
 
   @override
-  void copy(covariant SolidColorBase source) {
+  void copy(Core source) {
     super.copy(source);
-    _colorValue = source._colorValue;
+    if (source is SolidColorBase) {
+      _colorValue = source._colorValue;
+    }
   }
 }

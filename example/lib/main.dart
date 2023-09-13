@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+
+import 'package:rive_example/custom_asset_loading.dart';
+import 'package:rive_example/custom_cached_asset_loading.dart';
 import 'package:rive_example/carousel.dart';
 import 'package:rive_example/custom_controller.dart';
+import 'package:rive_example/event_sounds.dart';
 import 'package:rive_example/example_state_machine.dart';
 import 'package:rive_example/liquid_download.dart';
 import 'package:rive_example/little_machine.dart';
@@ -10,7 +14,9 @@ import 'package:rive_example/simple_animation.dart';
 import 'package:rive_example/simple_animation_network.dart';
 import 'package:rive_example/simple_machine_listener.dart';
 import 'package:rive_example/simple_state_machine.dart';
+import 'package:rive_example/skinning_demo.dart';
 import 'package:rive_example/state_machine_skills.dart';
+import 'package:rive_example/basic_text.dart';
 
 void main() => runApp(
       MaterialApp(
@@ -48,7 +54,12 @@ class _RiveExampleAppState extends State<RiveExampleApp> {
     const _Page('Custom Controller - Speed', SpeedyAnimation()),
     const _Page('Simple State Machine', SimpleStateMachine()),
     const _Page('State Machine with Listener', StateMachineListener()),
+    const _Page('Skinning Demo', SkinningDemo()),
     const _Page('Animation Carousel', AnimationCarousel()),
+    const _Page('Basic Text', BasicText()),
+    const _Page('Custom Asset Loading', CustomAssetLoading()),
+    const _Page('Custom Cached Asset Loading', CustomCachedAssetLoading()),
+    const _Page('Event Sounds', EventSounds()),
   ];
 
   @override

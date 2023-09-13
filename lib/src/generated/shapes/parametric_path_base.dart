@@ -1,7 +1,8 @@
-/// Core automatically generated
-/// lib/src/generated/shapes/parametric_path_base.dart.
-/// Do not modify manually.
+// Core automatically generated
+// lib/src/generated/shapes/parametric_path_base.dart.
+// Do not modify manually.
 
+import 'package:rive/src/core/core.dart';
 import 'package:rive/src/generated/component_base.dart';
 import 'package:rive/src/generated/container_component_base.dart';
 import 'package:rive/src/generated/node_base.dart';
@@ -26,9 +27,9 @@ abstract class ParametricPathBase extends Path {
 
   /// --------------------------------------------------------------------------
   /// Width field with key 20.
+  static const int widthPropertyKey = 20;
   static const double widthInitialValue = 0;
   double _width = widthInitialValue;
-  static const int widthPropertyKey = 20;
 
   /// Width of the parametric path.
   double get width => _width;
@@ -50,9 +51,9 @@ abstract class ParametricPathBase extends Path {
 
   /// --------------------------------------------------------------------------
   /// Height field with key 21.
+  static const int heightPropertyKey = 21;
   static const double heightInitialValue = 0;
   double _height = heightInitialValue;
-  static const int heightPropertyKey = 21;
 
   /// Height of the parametric path.
   double get height => _height;
@@ -74,9 +75,9 @@ abstract class ParametricPathBase extends Path {
 
   /// --------------------------------------------------------------------------
   /// OriginX field with key 123.
+  static const int originXPropertyKey = 123;
   static const double originXInitialValue = 0.5;
   double _originX = originXInitialValue;
-  static const int originXPropertyKey = 123;
 
   /// Origin x in normalized coordinates (0.5 = center, 0 = left, 1 = right).
   double get originX => _originX;
@@ -98,9 +99,9 @@ abstract class ParametricPathBase extends Path {
 
   /// --------------------------------------------------------------------------
   /// OriginY field with key 124.
+  static const int originYPropertyKey = 124;
   static const double originYInitialValue = 0.5;
   double _originY = originYInitialValue;
-  static const int originYPropertyKey = 124;
 
   /// Origin y in normalized coordinates (0.5 = center, 0 = top, 1 = bottom).
   double get originY => _originY;
@@ -121,11 +122,13 @@ abstract class ParametricPathBase extends Path {
   void originYChanged(double from, double to);
 
   @override
-  void copy(covariant ParametricPathBase source) {
+  void copy(Core source) {
     super.copy(source);
-    _width = source._width;
-    _height = source._height;
-    _originX = source._originX;
-    _originY = source._originY;
+    if (source is ParametricPathBase) {
+      _width = source._width;
+      _height = source._height;
+      _originX = source._originX;
+      _originY = source._originY;
+    }
   }
 }

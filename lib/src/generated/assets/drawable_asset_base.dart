@@ -1,7 +1,8 @@
-/// Core automatically generated
-/// lib/src/generated/assets/drawable_asset_base.dart.
-/// Do not modify manually.
+// Core automatically generated
+// lib/src/generated/assets/drawable_asset_base.dart.
+// Do not modify manually.
 
+import 'package:rive/src/core/core.dart';
 import 'package:rive/src/generated/assets/asset_base.dart';
 import 'package:rive/src/rive_core/assets/file_asset.dart';
 
@@ -15,9 +16,9 @@ abstract class DrawableAssetBase extends FileAsset {
 
   /// --------------------------------------------------------------------------
   /// Height field with key 207.
+  static const int heightPropertyKey = 207;
   static const double heightInitialValue = 0;
   double _height = heightInitialValue;
-  static const int heightPropertyKey = 207;
 
   /// Height of the original asset uploaded
   double get height => _height;
@@ -39,9 +40,9 @@ abstract class DrawableAssetBase extends FileAsset {
 
   /// --------------------------------------------------------------------------
   /// Width field with key 208.
+  static const int widthPropertyKey = 208;
   static const double widthInitialValue = 0;
   double _width = widthInitialValue;
-  static const int widthPropertyKey = 208;
 
   /// Width of the original asset uploaded
   double get width => _width;
@@ -62,9 +63,11 @@ abstract class DrawableAssetBase extends FileAsset {
   void widthChanged(double from, double to);
 
   @override
-  void copy(covariant DrawableAssetBase source) {
+  void copy(Core source) {
     super.copy(source);
-    _height = source._height;
-    _width = source._width;
+    if (source is DrawableAssetBase) {
+      _height = source._height;
+      _width = source._width;
+    }
   }
 }

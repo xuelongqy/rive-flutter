@@ -38,10 +38,54 @@ class LinearAnimation extends LinearAnimationBase {
     return true;
   }
 
+  bool isAnyObjectKeyed(Iterable<Core> objects) =>
+      objects.any((element) => _keyedObjects.containsKey(element.id));
+
+  bool isObjectKeyed(Core object) => _keyedObjects.containsKey(object.id);
+  bool removeObjectKeys(Core object) {
+    var value = _keyedObjects[object.id];
+    if (value == null) {
+      return false;
+    }
+    bool found = false;
+    for (final kp in value.keyedProperties) {
+      for (final kf in kp.keyframes.toList()) {
+        kf.remove();
+        found = true;
+      }
+    }
+    return found;
+  }
+
+  /// Returns the seconds where the animiation work area starts
   double get startSeconds => (enableWorkArea ? workStart : 0).toDouble() / fps;
+
+  /// Returns the seconds where the animiation work area ends
   double get endSeconds =>
       (enableWorkArea ? workEnd : duration).toDouble() / fps;
+
+  /// Returns the length of the animation
   double get durationSeconds => endSeconds - startSeconds;
+
+  /// Returns the end time of the animation in seconds, considering speed
+  double get endTime => (speed >= 0) ? endSeconds : startSeconds;
+
+  /// Returns the start time of the animation in seconds, considering speed
+  double get startTime => (speed >= 0) ? startSeconds : endSeconds;
+
+  void reportKeyedCallbacks(
+    double secondsFrom,
+    double secondsTo, {
+    required KeyedCallbackReporter reporter,
+  }) {
+    for (final keyedObject in _keyedObjects.values) {
+      keyedObject.reportKeyedCallbacks(
+        secondsFrom,
+        secondsTo,
+        reporter: reporter,
+      );
+    }
+  }
 
   /// Pass in a different [core] context if you want to apply the animation to a
   /// different instance. This isn't meant to be used yet but left as mostly a
@@ -50,6 +94,10 @@ class LinearAnimation extends LinearAnimationBase {
   /// animations exist once but entire Rive file can be instanced multiple times
   /// playing different positions).
   void apply(double time, {required CoreContext coreContext, double mix = 1}) {
+    if (quantize) {
+      // ignore: parameter_assignments
+      time = (time * fps).floor() / fps;
+    }
     for (final keyedObject in _keyedObjects.values) {
       keyedObject.apply(time, mix, coreContext);
     }
@@ -79,11 +127,8 @@ class LinearAnimation extends LinearAnimationBase {
   @override
   void workStartChanged(int from, int to) {}
 
-  /// Returns the end time of the animation in seconds
-  double get endTime => (enableWorkArea ? workEnd : duration).toDouble() / fps;
-
-  /// Returns the start time of the animation in seconds
-  double get startTime => (enableWorkArea ? workStart : 0).toDouble() / fps;
+  @override
+  void quantizeChanged(bool from, bool to) {}
 
   /// Convert a global clock to local seconds (takes into consideration work
   /// area start/end, speed, looping).

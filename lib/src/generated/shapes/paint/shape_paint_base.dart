@@ -1,6 +1,6 @@
-/// Core automatically generated
-/// lib/src/generated/shapes/paint/shape_paint_base.dart.
-/// Do not modify manually.
+// Core automatically generated
+// lib/src/generated/shapes/paint/shape_paint_base.dart.
+// Do not modify manually.
 
 import 'package:rive/src/generated/component_base.dart';
 import 'package:rive/src/generated/container_component_base.dart';
@@ -19,9 +19,9 @@ abstract class ShapePaintBase extends ContainerComponent {
 
   /// --------------------------------------------------------------------------
   /// IsVisible field with key 41.
+  static const int isVisiblePropertyKey = 41;
   static const bool isVisibleInitialValue = true;
   bool _isVisible = isVisibleInitialValue;
-  static const int isVisiblePropertyKey = 41;
   bool get isVisible => _isVisible;
 
   /// Change the [_isVisible] field value.
@@ -40,8 +40,10 @@ abstract class ShapePaintBase extends ContainerComponent {
   void isVisibleChanged(bool from, bool to);
 
   @override
-  void copy(covariant ShapePaintBase source) {
+  void copy(Core source) {
     super.copy(source);
-    _isVisible = source._isVisible;
+    if (source is ShapePaintBase) {
+      _isVisible = source._isVisible;
+    }
   }
 }

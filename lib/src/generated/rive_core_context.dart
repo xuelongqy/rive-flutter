@@ -6,10 +6,13 @@ import 'package:rive/src/core/field_types/core_double_type.dart';
 import 'package:rive/src/core/field_types/core_field_type.dart';
 import 'package:rive/src/core/field_types/core_string_type.dart';
 import 'package:rive/src/core/field_types/core_uint_type.dart';
+import 'package:rive/src/generated/animation/advanceable_state_base.dart';
 import 'package:rive/src/generated/animation/blend_animation_base.dart';
 import 'package:rive/src/generated/animation/cubic_ease_interpolator_base.dart';
 import 'package:rive/src/generated/animation/cubic_interpolator_base.dart';
+import 'package:rive/src/generated/animation/interpolating_keyframe_base.dart';
 import 'package:rive/src/generated/animation/keyframe_base.dart';
+import 'package:rive/src/generated/animation/keyframe_string_base.dart';
 import 'package:rive/src/generated/animation/listener_input_change_base.dart';
 import 'package:rive/src/generated/animation/nested_input_base.dart';
 import 'package:rive/src/generated/animation/nested_linear_animation_base.dart';
@@ -42,18 +45,22 @@ import 'package:rive/src/rive_core/animation/blend_state_1d.dart';
 import 'package:rive/src/rive_core/animation/blend_state_direct.dart';
 import 'package:rive/src/rive_core/animation/blend_state_transition.dart';
 import 'package:rive/src/rive_core/animation/cubic_ease_interpolator.dart';
+import 'package:rive/src/rive_core/animation/cubic_interpolator_component.dart';
 import 'package:rive/src/rive_core/animation/cubic_value_interpolator.dart';
 import 'package:rive/src/rive_core/animation/entry_state.dart';
 import 'package:rive/src/rive_core/animation/exit_state.dart';
 import 'package:rive/src/rive_core/animation/keyed_object.dart';
 import 'package:rive/src/rive_core/animation/keyed_property.dart';
 import 'package:rive/src/rive_core/animation/keyframe_bool.dart';
+import 'package:rive/src/rive_core/animation/keyframe_callback.dart';
 import 'package:rive/src/rive_core/animation/keyframe_color.dart';
 import 'package:rive/src/rive_core/animation/keyframe_double.dart';
 import 'package:rive/src/rive_core/animation/keyframe_id.dart';
+import 'package:rive/src/rive_core/animation/keyframe_string.dart';
 import 'package:rive/src/rive_core/animation/linear_animation.dart';
 import 'package:rive/src/rive_core/animation/listener_align_target.dart';
 import 'package:rive/src/rive_core/animation/listener_bool_change.dart';
+import 'package:rive/src/rive_core/animation/listener_fire_event.dart';
 import 'package:rive/src/rive_core/animation/listener_number_change.dart';
 import 'package:rive/src/rive_core/animation/listener_trigger_change.dart';
 import 'package:rive/src/rive_core/animation/nested_bool.dart';
@@ -64,6 +71,7 @@ import 'package:rive/src/rive_core/animation/nested_state_machine.dart';
 import 'package:rive/src/rive_core/animation/nested_trigger.dart';
 import 'package:rive/src/rive_core/animation/state_machine.dart';
 import 'package:rive/src/rive_core/animation/state_machine_bool.dart';
+import 'package:rive/src/rive_core/animation/state_machine_fire_event.dart';
 import 'package:rive/src/rive_core/animation/state_machine_layer.dart';
 import 'package:rive/src/rive_core/animation/state_machine_listener.dart';
 import 'package:rive/src/rive_core/animation/state_machine_number.dart';
@@ -75,6 +83,7 @@ import 'package:rive/src/rive_core/animation/transition_trigger_condition.dart';
 import 'package:rive/src/rive_core/artboard.dart';
 import 'package:rive/src/rive_core/assets/file_asset_contents.dart';
 import 'package:rive/src/rive_core/assets/folder.dart';
+import 'package:rive/src/rive_core/assets/font_asset.dart';
 import 'package:rive/src/rive_core/assets/image_asset.dart';
 import 'package:rive/src/rive_core/backboard.dart';
 import 'package:rive/src/rive_core/bones/bone.dart';
@@ -84,6 +93,7 @@ import 'package:rive/src/rive_core/bones/skin.dart';
 import 'package:rive/src/rive_core/bones/tendon.dart';
 import 'package:rive/src/rive_core/bones/weight.dart';
 import 'package:rive/src/rive_core/constraints/distance_constraint.dart';
+import 'package:rive/src/rive_core/constraints/follow_path_constraint.dart';
 import 'package:rive/src/rive_core/constraints/ik_constraint.dart';
 import 'package:rive/src/rive_core/constraints/rotation_constraint.dart';
 import 'package:rive/src/rive_core/constraints/scale_constraint.dart';
@@ -95,8 +105,10 @@ import 'package:rive/src/rive_core/custom_property_string.dart';
 import 'package:rive/src/rive_core/draw_rules.dart';
 import 'package:rive/src/rive_core/draw_target.dart';
 import 'package:rive/src/rive_core/event.dart';
+import 'package:rive/src/rive_core/joystick.dart';
 import 'package:rive/src/rive_core/nested_artboard.dart';
 import 'package:rive/src/rive_core/node.dart';
+import 'package:rive/src/rive_core/open_url_event.dart';
 import 'package:rive/src/rive_core/shapes/clipping_shape.dart';
 import 'package:rive/src/rive_core/shapes/contour_mesh_vertex.dart';
 import 'package:rive/src/rive_core/shapes/cubic_asymmetric_vertex.dart';
@@ -120,6 +132,15 @@ import 'package:rive/src/rive_core/shapes/shape.dart';
 import 'package:rive/src/rive_core/shapes/star.dart';
 import 'package:rive/src/rive_core/shapes/straight_vertex.dart';
 import 'package:rive/src/rive_core/shapes/triangle.dart';
+import 'package:rive/src/rive_core/solo.dart';
+import 'package:rive/src/rive_core/text/text.dart';
+import 'package:rive/src/rive_core/text/text_modifier_group.dart';
+import 'package:rive/src/rive_core/text/text_modifier_range.dart';
+import 'package:rive/src/rive_core/text/text_style.dart';
+import 'package:rive/src/rive_core/text/text_style_axis.dart';
+import 'package:rive/src/rive_core/text/text_style_feature.dart';
+import 'package:rive/src/rive_core/text/text_value_run.dart';
+import 'package:rive/src/rive_core/text/text_variation_modifier.dart';
 
 // ignore: avoid_classes_with_only_static_members
 class RiveCoreContext {
@@ -133,6 +154,8 @@ class RiveCoreContext {
         return DistanceConstraint();
       case IKConstraintBase.typeKey:
         return IKConstraint();
+      case FollowPathConstraintBase.typeKey:
+        return FollowPathConstraint();
       case TranslationConstraintBase.typeKey:
         return TranslationConstraint();
       case TransformConstraintBase.typeKey:
@@ -145,6 +168,10 @@ class RiveCoreContext {
         return Node();
       case NestedArtboardBase.typeKey:
         return NestedArtboard();
+      case SoloBase.typeKey:
+        return Solo();
+      case ListenerFireEventBase.typeKey:
+        return ListenerFireEvent();
       case AnimationBase.typeKey:
         return Animation();
       case LinearAnimationBase.typeKey:
@@ -181,8 +208,12 @@ class RiveCoreContext {
         return TransitionNumberCondition();
       case AnyStateBase.typeKey:
         return AnyState();
+      case CubicInterpolatorComponentBase.typeKey:
+        return CubicInterpolatorComponent();
       case StateMachineLayerBase.typeKey:
         return StateMachineLayer();
+      case KeyFrameStringBase.typeKey:
+        return KeyFrameString();
       case ListenerNumberChangeBase.typeKey:
         return ListenerNumberChange();
       case CubicEaseInterpolatorBase.typeKey:
@@ -197,6 +228,8 @@ class RiveCoreContext {
         return KeyFrameColor();
       case StateMachineBase.typeKey:
         return StateMachine();
+      case StateMachineFireEventBase.typeKey:
+        return StateMachineFireEvent();
       case EntryStateBase.typeKey:
         return EntryState();
       case StateMachineTriggerBase.typeKey:
@@ -215,6 +248,8 @@ class RiveCoreContext {
         return BlendAnimation1D();
       case BlendState1DBase.typeKey:
         return BlendState1D();
+      case KeyFrameCallbackBase.typeKey:
+        return KeyFrameCallback();
       case NestedRemapAnimationBase.typeKey:
         return NestedRemapAnimation();
       case TransitionBoolConditionBase.typeKey:
@@ -281,8 +316,12 @@ class RiveCoreContext {
         return CustomPropertyBoolean();
       case ArtboardBase.typeKey:
         return Artboard();
+      case JoystickBase.typeKey:
+        return Joystick();
       case BackboardBase.typeKey:
         return Backboard();
+      case OpenUrlEventBase.typeKey:
+        return OpenUrlEvent();
       case BoneBase.typeKey:
         return Bone();
       case RootBoneBase.typeKey:
@@ -291,12 +330,30 @@ class RiveCoreContext {
         return Skin();
       case TendonBase.typeKey:
         return Tendon();
+      case TextModifierRangeBase.typeKey:
+        return TextModifierRange();
+      case TextStyleFeatureBase.typeKey:
+        return TextStyleFeature();
+      case TextVariationModifierBase.typeKey:
+        return TextVariationModifier();
+      case TextModifierGroupBase.typeKey:
+        return TextModifierGroup();
+      case TextStyleBase.typeKey:
+        return TextStyle();
+      case TextStyleAxisBase.typeKey:
+        return TextStyleAxis();
+      case TextBase.typeKey:
+        return Text();
+      case TextValueRunBase.typeKey:
+        return TextValueRun();
       case CustomPropertyStringBase.typeKey:
         return CustomPropertyString();
       case FolderBase.typeKey:
         return Folder();
       case ImageAssetBase.typeKey:
         return ImageAsset();
+      case FontAssetBase.typeKey:
+        return FontAsset();
       case FileAssetContentsBase.typeKey:
         return FileAssetContents();
       default:
@@ -441,6 +498,31 @@ class RiveCoreContext {
           object.parentBoneCount = value;
         }
         break;
+      case FollowPathConstraintBase.distancePropertyKey:
+        if (object is FollowPathConstraintBase && value is double) {
+          object.distance = value;
+        }
+        break;
+      case FollowPathConstraintBase.orientPropertyKey:
+        if (object is FollowPathConstraintBase && value is bool) {
+          object.orient = value;
+        }
+        break;
+      case FollowPathConstraintBase.offsetPropertyKey:
+        if (object is FollowPathConstraintBase && value is bool) {
+          object.offset = value;
+        }
+        break;
+      case TransformConstraintBase.originXPropertyKey:
+        if (object is TransformConstraintBase && value is double) {
+          object.originX = value;
+        }
+        break;
+      case TransformConstraintBase.originYPropertyKey:
+        if (object is TransformConstraintBase && value is double) {
+          object.originY = value;
+        }
+        break;
       case WorldTransformComponentBase.opacityPropertyKey:
         if (object is WorldTransformComponentBase && value is double) {
           object.opacity = value;
@@ -491,6 +573,16 @@ class RiveCoreContext {
           object.animationId = value;
         }
         break;
+      case SoloBase.activeComponentIdPropertyKey:
+        if (object is SoloBase && value is int) {
+          object.activeComponentId = value;
+        }
+        break;
+      case ListenerFireEventBase.eventIdPropertyKey:
+        if (object is ListenerFireEventBase && value is int) {
+          object.eventId = value;
+        }
+        break;
       case AnimationBase.namePropertyKey:
         if (object is AnimationBase && value is String) {
           object.name = value;
@@ -531,6 +623,11 @@ class RiveCoreContext {
           object.enableWorkArea = value;
         }
         break;
+      case LinearAnimationBase.quantizePropertyKey:
+        if (object is LinearAnimationBase && value is bool) {
+          object.quantize = value;
+        }
+        break;
       case NestedLinearAnimationBase.mixPropertyKey:
         if (object is NestedLinearAnimationBase && value is double) {
           object.mix = value;
@@ -549,6 +646,11 @@ class RiveCoreContext {
       case ListenerInputChangeBase.inputIdPropertyKey:
         if (object is ListenerInputChangeBase && value is int) {
           object.inputId = value;
+        }
+        break;
+      case AdvanceableStateBase.speedPropertyKey:
+        if (object is AdvanceableStateBase && value is double) {
+          object.speed = value;
         }
         break;
       case AnimationStateBase.animationIdPropertyKey:
@@ -574,6 +676,16 @@ class RiveCoreContext {
       case BlendAnimationDirectBase.inputIdPropertyKey:
         if (object is BlendAnimationDirectBase && value is int) {
           object.inputId = value;
+        }
+        break;
+      case BlendAnimationDirectBase.mixValuePropertyKey:
+        if (object is BlendAnimationDirectBase && value is double) {
+          object.mixValue = value;
+        }
+        break;
+      case BlendAnimationDirectBase.blendSourcePropertyKey:
+        if (object is BlendAnimationDirectBase && value is int) {
+          object.blendSource = value;
         }
         break;
       case StateMachineComponentBase.namePropertyKey:
@@ -631,13 +743,13 @@ class RiveCoreContext {
           object.frame = value;
         }
         break;
-      case KeyFrameBase.interpolationTypePropertyKey:
-        if (object is KeyFrameBase && value is int) {
+      case InterpolatingKeyFrameBase.interpolationTypePropertyKey:
+        if (object is InterpolatingKeyFrameBase && value is int) {
           object.interpolationType = value;
         }
         break;
-      case KeyFrameBase.interpolatorIdPropertyKey:
-        if (object is KeyFrameBase && value is int) {
+      case InterpolatingKeyFrameBase.interpolatorIdPropertyKey:
+        if (object is InterpolatingKeyFrameBase && value is int) {
           object.interpolatorId = value;
         }
         break;
@@ -671,6 +783,31 @@ class RiveCoreContext {
           object.value = value;
         }
         break;
+      case CubicInterpolatorComponentBase.x1PropertyKey:
+        if (object is CubicInterpolatorComponentBase && value is double) {
+          object.x1 = value;
+        }
+        break;
+      case CubicInterpolatorComponentBase.y1PropertyKey:
+        if (object is CubicInterpolatorComponentBase && value is double) {
+          object.y1 = value;
+        }
+        break;
+      case CubicInterpolatorComponentBase.x2PropertyKey:
+        if (object is CubicInterpolatorComponentBase && value is double) {
+          object.x2 = value;
+        }
+        break;
+      case CubicInterpolatorComponentBase.y2PropertyKey:
+        if (object is CubicInterpolatorComponentBase && value is double) {
+          object.y2 = value;
+        }
+        break;
+      case KeyFrameStringBase.valuePropertyKey:
+        if (object is KeyFrameStringBase && value is String) {
+          object.value = value;
+        }
+        break;
       case ListenerNumberChangeBase.valuePropertyKey:
         if (object is ListenerNumberChangeBase && value is double) {
           object.value = value;
@@ -696,6 +833,16 @@ class RiveCoreContext {
           object.exitTime = value;
         }
         break;
+      case StateTransitionBase.interpolationTypePropertyKey:
+        if (object is StateTransitionBase && value is int) {
+          object.interpolationType = value;
+        }
+        break;
+      case StateTransitionBase.interpolatorIdPropertyKey:
+        if (object is StateTransitionBase && value is int) {
+          object.interpolatorId = value;
+        }
+        break;
       case NestedBoolBase.nestedValuePropertyKey:
         if (object is NestedBoolBase && value is bool) {
           object.nestedValue = value;
@@ -709,6 +856,16 @@ class RiveCoreContext {
       case KeyFrameColorBase.valuePropertyKey:
         if (object is KeyFrameColorBase && value is int) {
           object.value = value;
+        }
+        break;
+      case StateMachineFireEventBase.eventIdPropertyKey:
+        if (object is StateMachineFireEventBase && value is int) {
+          object.eventId = value;
+        }
+        break;
+      case StateMachineFireEventBase.occursValuePropertyKey:
+        if (object is StateMachineFireEventBase && value is int) {
+          object.occursValue = value;
         }
         break;
       case NestedNumberBase.nestedValuePropertyKey:
@@ -1006,6 +1163,16 @@ class RiveCoreContext {
           object.assetId = value;
         }
         break;
+      case ImageBase.originXPropertyKey:
+        if (object is ImageBase && value is double) {
+          object.originX = value;
+        }
+        break;
+      case ImageBase.originYPropertyKey:
+        if (object is ImageBase && value is double) {
+          object.originY = value;
+        }
+        break;
       case CubicDetachedVertexBase.inRotationPropertyKey:
         if (object is CubicDetachedVertexBase && value is double) {
           object.inRotation = value;
@@ -1024,11 +1191,6 @@ class RiveCoreContext {
       case CubicDetachedVertexBase.outDistancePropertyKey:
         if (object is CubicDetachedVertexBase && value is double) {
           object.outDistance = value;
-        }
-        break;
-      case EventBase.typePropertyKey:
-        if (object is EventBase && value is String) {
-          object.type = value;
         }
         break;
       case DrawRulesBase.drawTargetIdPropertyKey:
@@ -1079,6 +1241,76 @@ class RiveCoreContext {
       case ArtboardBase.defaultStateMachineIdPropertyKey:
         if (object is ArtboardBase && value is int) {
           object.defaultStateMachineId = value;
+        }
+        break;
+      case JoystickBase.xPropertyKey:
+        if (object is JoystickBase && value is double) {
+          object.x = value;
+        }
+        break;
+      case JoystickBase.yPropertyKey:
+        if (object is JoystickBase && value is double) {
+          object.y = value;
+        }
+        break;
+      case JoystickBase.posXPropertyKey:
+        if (object is JoystickBase && value is double) {
+          object.posX = value;
+        }
+        break;
+      case JoystickBase.posYPropertyKey:
+        if (object is JoystickBase && value is double) {
+          object.posY = value;
+        }
+        break;
+      case JoystickBase.originXPropertyKey:
+        if (object is JoystickBase && value is double) {
+          object.originX = value;
+        }
+        break;
+      case JoystickBase.originYPropertyKey:
+        if (object is JoystickBase && value is double) {
+          object.originY = value;
+        }
+        break;
+      case JoystickBase.widthPropertyKey:
+        if (object is JoystickBase && value is double) {
+          object.width = value;
+        }
+        break;
+      case JoystickBase.heightPropertyKey:
+        if (object is JoystickBase && value is double) {
+          object.height = value;
+        }
+        break;
+      case JoystickBase.xIdPropertyKey:
+        if (object is JoystickBase && value is int) {
+          object.xId = value;
+        }
+        break;
+      case JoystickBase.yIdPropertyKey:
+        if (object is JoystickBase && value is int) {
+          object.yId = value;
+        }
+        break;
+      case JoystickBase.joystickFlagsPropertyKey:
+        if (object is JoystickBase && value is int) {
+          object.joystickFlags = value;
+        }
+        break;
+      case JoystickBase.handleSourceIdPropertyKey:
+        if (object is JoystickBase && value is int) {
+          object.handleSourceId = value;
+        }
+        break;
+      case OpenUrlEventBase.urlPropertyKey:
+        if (object is OpenUrlEventBase && value is String) {
+          object.url = value;
+        }
+        break;
+      case OpenUrlEventBase.targetValuePropertyKey:
+        if (object is OpenUrlEventBase && value is int) {
+          object.targetValue = value;
         }
         break;
       case BoneBase.lengthPropertyKey:
@@ -1161,6 +1393,211 @@ class RiveCoreContext {
           object.ty = value;
         }
         break;
+      case TextModifierRangeBase.modifyFromPropertyKey:
+        if (object is TextModifierRangeBase && value is double) {
+          object.modifyFrom = value;
+        }
+        break;
+      case TextModifierRangeBase.modifyToPropertyKey:
+        if (object is TextModifierRangeBase && value is double) {
+          object.modifyTo = value;
+        }
+        break;
+      case TextModifierRangeBase.strengthPropertyKey:
+        if (object is TextModifierRangeBase && value is double) {
+          object.strength = value;
+        }
+        break;
+      case TextModifierRangeBase.unitsValuePropertyKey:
+        if (object is TextModifierRangeBase && value is int) {
+          object.unitsValue = value;
+        }
+        break;
+      case TextModifierRangeBase.typeValuePropertyKey:
+        if (object is TextModifierRangeBase && value is int) {
+          object.typeValue = value;
+        }
+        break;
+      case TextModifierRangeBase.modeValuePropertyKey:
+        if (object is TextModifierRangeBase && value is int) {
+          object.modeValue = value;
+        }
+        break;
+      case TextModifierRangeBase.clampPropertyKey:
+        if (object is TextModifierRangeBase && value is bool) {
+          object.clamp = value;
+        }
+        break;
+      case TextModifierRangeBase.falloffFromPropertyKey:
+        if (object is TextModifierRangeBase && value is double) {
+          object.falloffFrom = value;
+        }
+        break;
+      case TextModifierRangeBase.falloffToPropertyKey:
+        if (object is TextModifierRangeBase && value is double) {
+          object.falloffTo = value;
+        }
+        break;
+      case TextModifierRangeBase.offsetPropertyKey:
+        if (object is TextModifierRangeBase && value is double) {
+          object.offset = value;
+        }
+        break;
+      case TextModifierRangeBase.runIdPropertyKey:
+        if (object is TextModifierRangeBase && value is int) {
+          object.runId = value;
+        }
+        break;
+      case TextStyleFeatureBase.tagPropertyKey:
+        if (object is TextStyleFeatureBase && value is int) {
+          object.tag = value;
+        }
+        break;
+      case TextStyleFeatureBase.featureValuePropertyKey:
+        if (object is TextStyleFeatureBase && value is int) {
+          object.featureValue = value;
+        }
+        break;
+      case TextVariationModifierBase.axisTagPropertyKey:
+        if (object is TextVariationModifierBase && value is int) {
+          object.axisTag = value;
+        }
+        break;
+      case TextVariationModifierBase.axisValuePropertyKey:
+        if (object is TextVariationModifierBase && value is double) {
+          object.axisValue = value;
+        }
+        break;
+      case TextModifierGroupBase.modifierFlagsPropertyKey:
+        if (object is TextModifierGroupBase && value is int) {
+          object.modifierFlags = value;
+        }
+        break;
+      case TextModifierGroupBase.originXPropertyKey:
+        if (object is TextModifierGroupBase && value is double) {
+          object.originX = value;
+        }
+        break;
+      case TextModifierGroupBase.originYPropertyKey:
+        if (object is TextModifierGroupBase && value is double) {
+          object.originY = value;
+        }
+        break;
+      case TextModifierGroupBase.opacityPropertyKey:
+        if (object is TextModifierGroupBase && value is double) {
+          object.opacity = value;
+        }
+        break;
+      case TextModifierGroupBase.xPropertyKey:
+        if (object is TextModifierGroupBase && value is double) {
+          object.x = value;
+        }
+        break;
+      case TextModifierGroupBase.yPropertyKey:
+        if (object is TextModifierGroupBase && value is double) {
+          object.y = value;
+        }
+        break;
+      case TextModifierGroupBase.rotationPropertyKey:
+        if (object is TextModifierGroupBase && value is double) {
+          object.rotation = value;
+        }
+        break;
+      case TextModifierGroupBase.scaleXPropertyKey:
+        if (object is TextModifierGroupBase && value is double) {
+          object.scaleX = value;
+        }
+        break;
+      case TextModifierGroupBase.scaleYPropertyKey:
+        if (object is TextModifierGroupBase && value is double) {
+          object.scaleY = value;
+        }
+        break;
+      case TextStyleBase.fontSizePropertyKey:
+        if (object is TextStyleBase && value is double) {
+          object.fontSize = value;
+        }
+        break;
+      case TextStyleBase.lineHeightPropertyKey:
+        if (object is TextStyleBase && value is double) {
+          object.lineHeight = value;
+        }
+        break;
+      case TextStyleBase.letterSpacingPropertyKey:
+        if (object is TextStyleBase && value is double) {
+          object.letterSpacing = value;
+        }
+        break;
+      case TextStyleBase.fontAssetIdPropertyKey:
+        if (object is TextStyleBase && value is int) {
+          object.fontAssetId = value;
+        }
+        break;
+      case TextStyleAxisBase.tagPropertyKey:
+        if (object is TextStyleAxisBase && value is int) {
+          object.tag = value;
+        }
+        break;
+      case TextStyleAxisBase.axisValuePropertyKey:
+        if (object is TextStyleAxisBase && value is double) {
+          object.axisValue = value;
+        }
+        break;
+      case TextBase.alignValuePropertyKey:
+        if (object is TextBase && value is int) {
+          object.alignValue = value;
+        }
+        break;
+      case TextBase.sizingValuePropertyKey:
+        if (object is TextBase && value is int) {
+          object.sizingValue = value;
+        }
+        break;
+      case TextBase.overflowValuePropertyKey:
+        if (object is TextBase && value is int) {
+          object.overflowValue = value;
+        }
+        break;
+      case TextBase.widthPropertyKey:
+        if (object is TextBase && value is double) {
+          object.width = value;
+        }
+        break;
+      case TextBase.heightPropertyKey:
+        if (object is TextBase && value is double) {
+          object.height = value;
+        }
+        break;
+      case TextBase.originXPropertyKey:
+        if (object is TextBase && value is double) {
+          object.originX = value;
+        }
+        break;
+      case TextBase.originYPropertyKey:
+        if (object is TextBase && value is double) {
+          object.originY = value;
+        }
+        break;
+      case TextBase.paragraphSpacingPropertyKey:
+        if (object is TextBase && value is double) {
+          object.paragraphSpacing = value;
+        }
+        break;
+      case TextBase.originValuePropertyKey:
+        if (object is TextBase && value is int) {
+          object.originValue = value;
+        }
+        break;
+      case TextValueRunBase.styleIdPropertyKey:
+        if (object is TextValueRunBase && value is int) {
+          object.styleId = value;
+        }
+        break;
+      case TextValueRunBase.textPropertyKey:
+        if (object is TextValueRunBase && value is String) {
+          object.text = value;
+        }
+        break;
       case CustomPropertyStringBase.propertyValuePropertyKey:
         if (object is CustomPropertyStringBase && value is String) {
           object.propertyValue = value;
@@ -1174,6 +1611,16 @@ class RiveCoreContext {
       case FileAssetBase.assetIdPropertyKey:
         if (object is FileAssetBase && value is int) {
           object.assetId = value;
+        }
+        break;
+      case FileAssetBase.cdnUuidPropertyKey:
+        if (object is FileAssetBase && value is Uint8List) {
+          object.cdnUuid = value;
+        }
+        break;
+      case FileAssetBase.cdnBaseUrlPropertyKey:
+        if (object is FileAssetBase && value is String) {
+          object.cdnBaseUrl = value;
         }
         break;
       case DrawableAssetBase.heightPropertyKey:
@@ -1200,14 +1647,18 @@ class RiveCoreContext {
   static CoreFieldType boolType = CoreBoolType();
   static CoreFieldType colorType = CoreColorType();
   static CoreFieldType bytesType = CoreBytesType();
+  static CoreFieldType callbackType = CoreCallbackType();
   static CoreFieldType? coreType(int propertyKey) {
     switch (propertyKey) {
       case ComponentBase.namePropertyKey:
       case AnimationBase.namePropertyKey:
       case StateMachineComponentBase.namePropertyKey:
-      case EventBase.typePropertyKey:
+      case KeyFrameStringBase.valuePropertyKey:
+      case OpenUrlEventBase.urlPropertyKey:
+      case TextValueRunBase.textPropertyKey:
       case CustomPropertyStringBase.propertyValuePropertyKey:
       case AssetBase.namePropertyKey:
+      case FileAssetBase.cdnBaseUrlPropertyKey:
         return stringType;
       case ComponentBase.parentIdPropertyKey:
       case DrawTargetBase.drawableIdPropertyKey:
@@ -1222,6 +1673,8 @@ class RiveCoreContext {
       case DrawableBase.drawableFlagsPropertyKey:
       case NestedArtboardBase.artboardIdPropertyKey:
       case NestedAnimationBase.animationIdPropertyKey:
+      case SoloBase.activeComponentIdPropertyKey:
+      case ListenerFireEventBase.eventIdPropertyKey:
       case LinearAnimationBase.fpsPropertyKey:
       case LinearAnimationBase.durationPropertyKey:
       case LinearAnimationBase.loopValuePropertyKey:
@@ -1233,13 +1686,14 @@ class RiveCoreContext {
       case KeyedObjectBase.objectIdPropertyKey:
       case BlendAnimationBase.animationIdPropertyKey:
       case BlendAnimationDirectBase.inputIdPropertyKey:
+      case BlendAnimationDirectBase.blendSourcePropertyKey:
       case TransitionConditionBase.inputIdPropertyKey:
       case KeyedPropertyBase.propertyKeyPropertyKey:
       case StateMachineListenerBase.targetIdPropertyKey:
       case StateMachineListenerBase.listenerTypeValuePropertyKey:
       case KeyFrameBase.framePropertyKey:
-      case KeyFrameBase.interpolationTypePropertyKey:
-      case KeyFrameBase.interpolatorIdPropertyKey:
+      case InterpolatingKeyFrameBase.interpolationTypePropertyKey:
+      case InterpolatingKeyFrameBase.interpolatorIdPropertyKey:
       case KeyFrameIdBase.valuePropertyKey:
       case ListenerBoolChangeBase.valuePropertyKey:
       case ListenerAlignTargetBase.targetIdPropertyKey:
@@ -1248,6 +1702,10 @@ class RiveCoreContext {
       case StateTransitionBase.flagsPropertyKey:
       case StateTransitionBase.durationPropertyKey:
       case StateTransitionBase.exitTimePropertyKey:
+      case StateTransitionBase.interpolationTypePropertyKey:
+      case StateTransitionBase.interpolatorIdPropertyKey:
+      case StateMachineFireEventBase.eventIdPropertyKey:
+      case StateMachineFireEventBase.occursValuePropertyKey:
       case BlendState1DBase.inputIdPropertyKey:
       case BlendStateTransitionBase.exitBlendAnimationIdPropertyKey:
       case StrokeBase.capPropertyKey:
@@ -1267,7 +1725,27 @@ class RiveCoreContext {
       case ImageBase.assetIdPropertyKey:
       case DrawRulesBase.drawTargetIdPropertyKey:
       case ArtboardBase.defaultStateMachineIdPropertyKey:
+      case JoystickBase.xIdPropertyKey:
+      case JoystickBase.yIdPropertyKey:
+      case JoystickBase.joystickFlagsPropertyKey:
+      case JoystickBase.handleSourceIdPropertyKey:
+      case OpenUrlEventBase.targetValuePropertyKey:
       case TendonBase.boneIdPropertyKey:
+      case TextModifierRangeBase.unitsValuePropertyKey:
+      case TextModifierRangeBase.typeValuePropertyKey:
+      case TextModifierRangeBase.modeValuePropertyKey:
+      case TextModifierRangeBase.runIdPropertyKey:
+      case TextStyleFeatureBase.tagPropertyKey:
+      case TextStyleFeatureBase.featureValuePropertyKey:
+      case TextVariationModifierBase.axisTagPropertyKey:
+      case TextModifierGroupBase.modifierFlagsPropertyKey:
+      case TextStyleBase.fontAssetIdPropertyKey:
+      case TextStyleAxisBase.tagPropertyKey:
+      case TextBase.alignValuePropertyKey:
+      case TextBase.sizingValuePropertyKey:
+      case TextBase.overflowValuePropertyKey:
+      case TextBase.originValuePropertyKey:
+      case TextValueRunBase.styleIdPropertyKey:
       case FileAssetBase.assetIdPropertyKey:
         return uintType;
       case CustomPropertyNumberBase.propertyValuePropertyKey:
@@ -1279,6 +1757,9 @@ class RiveCoreContext {
       case TransformComponentConstraintYBase.copyFactorYPropertyKey:
       case TransformComponentConstraintYBase.minValueYPropertyKey:
       case TransformComponentConstraintYBase.maxValueYPropertyKey:
+      case FollowPathConstraintBase.distancePropertyKey:
+      case TransformConstraintBase.originXPropertyKey:
+      case TransformConstraintBase.originYPropertyKey:
       case WorldTransformComponentBase.opacityPropertyKey:
       case TransformComponentBase.rotationPropertyKey:
       case TransformComponentBase.scaleXPropertyKey:
@@ -1288,12 +1769,18 @@ class RiveCoreContext {
       case LinearAnimationBase.speedPropertyKey:
       case NestedLinearAnimationBase.mixPropertyKey:
       case NestedSimpleAnimationBase.speedPropertyKey:
+      case AdvanceableStateBase.speedPropertyKey:
+      case BlendAnimationDirectBase.mixValuePropertyKey:
       case StateMachineNumberBase.valuePropertyKey:
       case CubicInterpolatorBase.x1PropertyKey:
       case CubicInterpolatorBase.y1PropertyKey:
       case CubicInterpolatorBase.x2PropertyKey:
       case CubicInterpolatorBase.y2PropertyKey:
       case TransitionNumberConditionBase.valuePropertyKey:
+      case CubicInterpolatorComponentBase.x1PropertyKey:
+      case CubicInterpolatorComponentBase.y1PropertyKey:
+      case CubicInterpolatorComponentBase.x2PropertyKey:
+      case CubicInterpolatorComponentBase.y2PropertyKey:
       case ListenerNumberChangeBase.valuePropertyKey:
       case KeyFrameDoubleBase.valuePropertyKey:
       case NestedNumberBase.nestedValuePropertyKey:
@@ -1329,6 +1816,8 @@ class RiveCoreContext {
       case CubicMirroredVertexBase.distancePropertyKey:
       case PolygonBase.cornerRadiusPropertyKey:
       case StarBase.innerRadiusPropertyKey:
+      case ImageBase.originXPropertyKey:
+      case ImageBase.originYPropertyKey:
       case CubicDetachedVertexBase.inRotationPropertyKey:
       case CubicDetachedVertexBase.inDistancePropertyKey:
       case CubicDetachedVertexBase.outRotationPropertyKey:
@@ -1339,6 +1828,14 @@ class RiveCoreContext {
       case ArtboardBase.yPropertyKey:
       case ArtboardBase.originXPropertyKey:
       case ArtboardBase.originYPropertyKey:
+      case JoystickBase.xPropertyKey:
+      case JoystickBase.yPropertyKey:
+      case JoystickBase.posXPropertyKey:
+      case JoystickBase.posYPropertyKey:
+      case JoystickBase.originXPropertyKey:
+      case JoystickBase.originYPropertyKey:
+      case JoystickBase.widthPropertyKey:
+      case JoystickBase.heightPropertyKey:
       case BoneBase.lengthPropertyKey:
       case RootBoneBase.xPropertyKey:
       case RootBoneBase.yPropertyKey:
@@ -1354,6 +1851,30 @@ class RiveCoreContext {
       case TendonBase.yyPropertyKey:
       case TendonBase.txPropertyKey:
       case TendonBase.tyPropertyKey:
+      case TextModifierRangeBase.modifyFromPropertyKey:
+      case TextModifierRangeBase.modifyToPropertyKey:
+      case TextModifierRangeBase.strengthPropertyKey:
+      case TextModifierRangeBase.falloffFromPropertyKey:
+      case TextModifierRangeBase.falloffToPropertyKey:
+      case TextModifierRangeBase.offsetPropertyKey:
+      case TextVariationModifierBase.axisValuePropertyKey:
+      case TextModifierGroupBase.originXPropertyKey:
+      case TextModifierGroupBase.originYPropertyKey:
+      case TextModifierGroupBase.opacityPropertyKey:
+      case TextModifierGroupBase.xPropertyKey:
+      case TextModifierGroupBase.yPropertyKey:
+      case TextModifierGroupBase.rotationPropertyKey:
+      case TextModifierGroupBase.scaleXPropertyKey:
+      case TextModifierGroupBase.scaleYPropertyKey:
+      case TextStyleBase.fontSizePropertyKey:
+      case TextStyleBase.lineHeightPropertyKey:
+      case TextStyleBase.letterSpacingPropertyKey:
+      case TextStyleAxisBase.axisValuePropertyKey:
+      case TextBase.widthPropertyKey:
+      case TextBase.heightPropertyKey:
+      case TextBase.originXPropertyKey:
+      case TextBase.originYPropertyKey:
+      case TextBase.paragraphSpacingPropertyKey:
       case DrawableAssetBase.heightPropertyKey:
       case DrawableAssetBase.widthPropertyKey:
         return doubleType;
@@ -1365,7 +1886,10 @@ class RiveCoreContext {
       case TransformComponentConstraintYBase.minYPropertyKey:
       case TransformComponentConstraintYBase.maxYPropertyKey:
       case IKConstraintBase.invertDirectionPropertyKey:
+      case FollowPathConstraintBase.orientPropertyKey:
+      case FollowPathConstraintBase.offsetPropertyKey:
       case LinearAnimationBase.enableWorkAreaPropertyKey:
+      case LinearAnimationBase.quantizePropertyKey:
       case NestedSimpleAnimationBase.isPlayingPropertyKey:
       case KeyFrameBoolBase.valuePropertyKey:
       case NestedBoolBase.nestedValuePropertyKey:
@@ -1377,16 +1901,29 @@ class RiveCoreContext {
       case ClippingShapeBase.isVisiblePropertyKey:
       case CustomPropertyBooleanBase.propertyValuePropertyKey:
       case ArtboardBase.clipPropertyKey:
+      case TextModifierRangeBase.clampPropertyKey:
         return boolType;
       case KeyFrameColorBase.valuePropertyKey:
       case SolidColorBase.colorValuePropertyKey:
       case GradientStopBase.colorValuePropertyKey:
         return colorType;
       case MeshBase.triangleIndexBytesPropertyKey:
+      case FileAssetBase.cdnUuidPropertyKey:
       case FileAssetContentsBase.bytesPropertyKey:
         return bytesType;
+      case EventBase.triggerPropertyKey:
+        return callbackType;
       default:
         return null;
+    }
+  }
+
+  static bool isCallback(int propertyKey) {
+    switch (propertyKey) {
+      case EventBase.triggerPropertyKey:
+        return true;
+      default:
+        return false;
     }
   }
 
@@ -1398,12 +1935,18 @@ class RiveCoreContext {
         return (object as AnimationBase).name;
       case StateMachineComponentBase.namePropertyKey:
         return (object as StateMachineComponentBase).name;
-      case EventBase.typePropertyKey:
-        return (object as EventBase).type;
+      case KeyFrameStringBase.valuePropertyKey:
+        return (object as KeyFrameStringBase).value;
+      case OpenUrlEventBase.urlPropertyKey:
+        return (object as OpenUrlEventBase).url;
+      case TextValueRunBase.textPropertyKey:
+        return (object as TextValueRunBase).text;
       case CustomPropertyStringBase.propertyValuePropertyKey:
         return (object as CustomPropertyStringBase).propertyValue;
       case AssetBase.namePropertyKey:
         return (object as AssetBase).name;
+      case FileAssetBase.cdnBaseUrlPropertyKey:
+        return (object as FileAssetBase).cdnBaseUrl;
     }
     return '';
   }
@@ -1436,6 +1979,10 @@ class RiveCoreContext {
         return (object as NestedArtboardBase).artboardId;
       case NestedAnimationBase.animationIdPropertyKey:
         return (object as NestedAnimationBase).animationId;
+      case SoloBase.activeComponentIdPropertyKey:
+        return (object as SoloBase).activeComponentId;
+      case ListenerFireEventBase.eventIdPropertyKey:
+        return (object as ListenerFireEventBase).eventId;
       case LinearAnimationBase.fpsPropertyKey:
         return (object as LinearAnimationBase).fps;
       case LinearAnimationBase.durationPropertyKey:
@@ -1458,6 +2005,8 @@ class RiveCoreContext {
         return (object as BlendAnimationBase).animationId;
       case BlendAnimationDirectBase.inputIdPropertyKey:
         return (object as BlendAnimationDirectBase).inputId;
+      case BlendAnimationDirectBase.blendSourcePropertyKey:
+        return (object as BlendAnimationDirectBase).blendSource;
       case TransitionConditionBase.inputIdPropertyKey:
         return (object as TransitionConditionBase).inputId;
       case KeyedPropertyBase.propertyKeyPropertyKey:
@@ -1468,10 +2017,10 @@ class RiveCoreContext {
         return (object as StateMachineListenerBase).listenerTypeValue;
       case KeyFrameBase.framePropertyKey:
         return (object as KeyFrameBase).frame;
-      case KeyFrameBase.interpolationTypePropertyKey:
-        return (object as KeyFrameBase).interpolationType;
-      case KeyFrameBase.interpolatorIdPropertyKey:
-        return (object as KeyFrameBase).interpolatorId;
+      case InterpolatingKeyFrameBase.interpolationTypePropertyKey:
+        return (object as InterpolatingKeyFrameBase).interpolationType;
+      case InterpolatingKeyFrameBase.interpolatorIdPropertyKey:
+        return (object as InterpolatingKeyFrameBase).interpolatorId;
       case KeyFrameIdBase.valuePropertyKey:
         return (object as KeyFrameIdBase).value;
       case ListenerBoolChangeBase.valuePropertyKey:
@@ -1488,6 +2037,14 @@ class RiveCoreContext {
         return (object as StateTransitionBase).duration;
       case StateTransitionBase.exitTimePropertyKey:
         return (object as StateTransitionBase).exitTime;
+      case StateTransitionBase.interpolationTypePropertyKey:
+        return (object as StateTransitionBase).interpolationType;
+      case StateTransitionBase.interpolatorIdPropertyKey:
+        return (object as StateTransitionBase).interpolatorId;
+      case StateMachineFireEventBase.eventIdPropertyKey:
+        return (object as StateMachineFireEventBase).eventId;
+      case StateMachineFireEventBase.occursValuePropertyKey:
+        return (object as StateMachineFireEventBase).occursValue;
       case BlendState1DBase.inputIdPropertyKey:
         return (object as BlendState1DBase).inputId;
       case BlendStateTransitionBase.exitBlendAnimationIdPropertyKey:
@@ -1526,8 +2083,48 @@ class RiveCoreContext {
         return (object as DrawRulesBase).drawTargetId;
       case ArtboardBase.defaultStateMachineIdPropertyKey:
         return (object as ArtboardBase).defaultStateMachineId;
+      case JoystickBase.xIdPropertyKey:
+        return (object as JoystickBase).xId;
+      case JoystickBase.yIdPropertyKey:
+        return (object as JoystickBase).yId;
+      case JoystickBase.joystickFlagsPropertyKey:
+        return (object as JoystickBase).joystickFlags;
+      case JoystickBase.handleSourceIdPropertyKey:
+        return (object as JoystickBase).handleSourceId;
+      case OpenUrlEventBase.targetValuePropertyKey:
+        return (object as OpenUrlEventBase).targetValue;
       case TendonBase.boneIdPropertyKey:
         return (object as TendonBase).boneId;
+      case TextModifierRangeBase.unitsValuePropertyKey:
+        return (object as TextModifierRangeBase).unitsValue;
+      case TextModifierRangeBase.typeValuePropertyKey:
+        return (object as TextModifierRangeBase).typeValue;
+      case TextModifierRangeBase.modeValuePropertyKey:
+        return (object as TextModifierRangeBase).modeValue;
+      case TextModifierRangeBase.runIdPropertyKey:
+        return (object as TextModifierRangeBase).runId;
+      case TextStyleFeatureBase.tagPropertyKey:
+        return (object as TextStyleFeatureBase).tag;
+      case TextStyleFeatureBase.featureValuePropertyKey:
+        return (object as TextStyleFeatureBase).featureValue;
+      case TextVariationModifierBase.axisTagPropertyKey:
+        return (object as TextVariationModifierBase).axisTag;
+      case TextModifierGroupBase.modifierFlagsPropertyKey:
+        return (object as TextModifierGroupBase).modifierFlags;
+      case TextStyleBase.fontAssetIdPropertyKey:
+        return (object as TextStyleBase).fontAssetId;
+      case TextStyleAxisBase.tagPropertyKey:
+        return (object as TextStyleAxisBase).tag;
+      case TextBase.alignValuePropertyKey:
+        return (object as TextBase).alignValue;
+      case TextBase.sizingValuePropertyKey:
+        return (object as TextBase).sizingValue;
+      case TextBase.overflowValuePropertyKey:
+        return (object as TextBase).overflowValue;
+      case TextBase.originValuePropertyKey:
+        return (object as TextBase).originValue;
+      case TextValueRunBase.styleIdPropertyKey:
+        return (object as TextValueRunBase).styleId;
       case FileAssetBase.assetIdPropertyKey:
         return (object as FileAssetBase).assetId;
     }
@@ -1554,6 +2151,12 @@ class RiveCoreContext {
         return (object as TransformComponentConstraintYBase).minValueY;
       case TransformComponentConstraintYBase.maxValueYPropertyKey:
         return (object as TransformComponentConstraintYBase).maxValueY;
+      case FollowPathConstraintBase.distancePropertyKey:
+        return (object as FollowPathConstraintBase).distance;
+      case TransformConstraintBase.originXPropertyKey:
+        return (object as TransformConstraintBase).originX;
+      case TransformConstraintBase.originYPropertyKey:
+        return (object as TransformConstraintBase).originY;
       case WorldTransformComponentBase.opacityPropertyKey:
         return (object as WorldTransformComponentBase).opacity;
       case TransformComponentBase.rotationPropertyKey:
@@ -1572,6 +2175,10 @@ class RiveCoreContext {
         return (object as NestedLinearAnimationBase).mix;
       case NestedSimpleAnimationBase.speedPropertyKey:
         return (object as NestedSimpleAnimationBase).speed;
+      case AdvanceableStateBase.speedPropertyKey:
+        return (object as AdvanceableStateBase).speed;
+      case BlendAnimationDirectBase.mixValuePropertyKey:
+        return (object as BlendAnimationDirectBase).mixValue;
       case StateMachineNumberBase.valuePropertyKey:
         return (object as StateMachineNumberBase).value;
       case CubicInterpolatorBase.x1PropertyKey:
@@ -1584,6 +2191,14 @@ class RiveCoreContext {
         return (object as CubicInterpolatorBase).y2;
       case TransitionNumberConditionBase.valuePropertyKey:
         return (object as TransitionNumberConditionBase).value;
+      case CubicInterpolatorComponentBase.x1PropertyKey:
+        return (object as CubicInterpolatorComponentBase).x1;
+      case CubicInterpolatorComponentBase.y1PropertyKey:
+        return (object as CubicInterpolatorComponentBase).y1;
+      case CubicInterpolatorComponentBase.x2PropertyKey:
+        return (object as CubicInterpolatorComponentBase).x2;
+      case CubicInterpolatorComponentBase.y2PropertyKey:
+        return (object as CubicInterpolatorComponentBase).y2;
       case ListenerNumberChangeBase.valuePropertyKey:
         return (object as ListenerNumberChangeBase).value;
       case KeyFrameDoubleBase.valuePropertyKey:
@@ -1654,6 +2269,10 @@ class RiveCoreContext {
         return (object as PolygonBase).cornerRadius;
       case StarBase.innerRadiusPropertyKey:
         return (object as StarBase).innerRadius;
+      case ImageBase.originXPropertyKey:
+        return (object as ImageBase).originX;
+      case ImageBase.originYPropertyKey:
+        return (object as ImageBase).originY;
       case CubicDetachedVertexBase.inRotationPropertyKey:
         return (object as CubicDetachedVertexBase).inRotation;
       case CubicDetachedVertexBase.inDistancePropertyKey:
@@ -1674,6 +2293,22 @@ class RiveCoreContext {
         return (object as ArtboardBase).originX;
       case ArtboardBase.originYPropertyKey:
         return (object as ArtboardBase).originY;
+      case JoystickBase.xPropertyKey:
+        return (object as JoystickBase).x;
+      case JoystickBase.yPropertyKey:
+        return (object as JoystickBase).y;
+      case JoystickBase.posXPropertyKey:
+        return (object as JoystickBase).posX;
+      case JoystickBase.posYPropertyKey:
+        return (object as JoystickBase).posY;
+      case JoystickBase.originXPropertyKey:
+        return (object as JoystickBase).originX;
+      case JoystickBase.originYPropertyKey:
+        return (object as JoystickBase).originY;
+      case JoystickBase.widthPropertyKey:
+        return (object as JoystickBase).width;
+      case JoystickBase.heightPropertyKey:
+        return (object as JoystickBase).height;
       case BoneBase.lengthPropertyKey:
         return (object as BoneBase).length;
       case RootBoneBase.xPropertyKey:
@@ -1704,6 +2339,54 @@ class RiveCoreContext {
         return (object as TendonBase).tx;
       case TendonBase.tyPropertyKey:
         return (object as TendonBase).ty;
+      case TextModifierRangeBase.modifyFromPropertyKey:
+        return (object as TextModifierRangeBase).modifyFrom;
+      case TextModifierRangeBase.modifyToPropertyKey:
+        return (object as TextModifierRangeBase).modifyTo;
+      case TextModifierRangeBase.strengthPropertyKey:
+        return (object as TextModifierRangeBase).strength;
+      case TextModifierRangeBase.falloffFromPropertyKey:
+        return (object as TextModifierRangeBase).falloffFrom;
+      case TextModifierRangeBase.falloffToPropertyKey:
+        return (object as TextModifierRangeBase).falloffTo;
+      case TextModifierRangeBase.offsetPropertyKey:
+        return (object as TextModifierRangeBase).offset;
+      case TextVariationModifierBase.axisValuePropertyKey:
+        return (object as TextVariationModifierBase).axisValue;
+      case TextModifierGroupBase.originXPropertyKey:
+        return (object as TextModifierGroupBase).originX;
+      case TextModifierGroupBase.originYPropertyKey:
+        return (object as TextModifierGroupBase).originY;
+      case TextModifierGroupBase.opacityPropertyKey:
+        return (object as TextModifierGroupBase).opacity;
+      case TextModifierGroupBase.xPropertyKey:
+        return (object as TextModifierGroupBase).x;
+      case TextModifierGroupBase.yPropertyKey:
+        return (object as TextModifierGroupBase).y;
+      case TextModifierGroupBase.rotationPropertyKey:
+        return (object as TextModifierGroupBase).rotation;
+      case TextModifierGroupBase.scaleXPropertyKey:
+        return (object as TextModifierGroupBase).scaleX;
+      case TextModifierGroupBase.scaleYPropertyKey:
+        return (object as TextModifierGroupBase).scaleY;
+      case TextStyleBase.fontSizePropertyKey:
+        return (object as TextStyleBase).fontSize;
+      case TextStyleBase.lineHeightPropertyKey:
+        return (object as TextStyleBase).lineHeight;
+      case TextStyleBase.letterSpacingPropertyKey:
+        return (object as TextStyleBase).letterSpacing;
+      case TextStyleAxisBase.axisValuePropertyKey:
+        return (object as TextStyleAxisBase).axisValue;
+      case TextBase.widthPropertyKey:
+        return (object as TextBase).width;
+      case TextBase.heightPropertyKey:
+        return (object as TextBase).height;
+      case TextBase.originXPropertyKey:
+        return (object as TextBase).originX;
+      case TextBase.originYPropertyKey:
+        return (object as TextBase).originY;
+      case TextBase.paragraphSpacingPropertyKey:
+        return (object as TextBase).paragraphSpacing;
       case DrawableAssetBase.heightPropertyKey:
         return (object as DrawableAssetBase).height;
       case DrawableAssetBase.widthPropertyKey:
@@ -1730,8 +2413,14 @@ class RiveCoreContext {
         return (object as TransformComponentConstraintYBase).maxY;
       case IKConstraintBase.invertDirectionPropertyKey:
         return (object as IKConstraintBase).invertDirection;
+      case FollowPathConstraintBase.orientPropertyKey:
+        return (object as FollowPathConstraintBase).orient;
+      case FollowPathConstraintBase.offsetPropertyKey:
+        return (object as FollowPathConstraintBase).offset;
       case LinearAnimationBase.enableWorkAreaPropertyKey:
         return (object as LinearAnimationBase).enableWorkArea;
+      case LinearAnimationBase.quantizePropertyKey:
+        return (object as LinearAnimationBase).quantize;
       case NestedSimpleAnimationBase.isPlayingPropertyKey:
         return (object as NestedSimpleAnimationBase).isPlaying;
       case KeyFrameBoolBase.valuePropertyKey:
@@ -1754,6 +2443,8 @@ class RiveCoreContext {
         return (object as CustomPropertyBooleanBase).propertyValue;
       case ArtboardBase.clipPropertyKey:
         return (object as ArtboardBase).clip;
+      case TextModifierRangeBase.clampPropertyKey:
+        return (object as TextModifierRangeBase).clamp;
     }
     return false;
   }
@@ -1774,6 +2465,8 @@ class RiveCoreContext {
     switch (propertyKey) {
       case MeshBase.triangleIndexBytesPropertyKey:
         return (object as MeshBase).triangleIndexBytes;
+      case FileAssetBase.cdnUuidPropertyKey:
+        return (object as FileAssetBase).cdnUuid;
       case FileAssetContentsBase.bytesPropertyKey:
         return (object as FileAssetContentsBase).bytes;
     }
@@ -1797,9 +2490,19 @@ class RiveCoreContext {
           object.name = value;
         }
         break;
-      case EventBase.typePropertyKey:
-        if (object is EventBase) {
-          object.type = value;
+      case KeyFrameStringBase.valuePropertyKey:
+        if (object is KeyFrameStringBase) {
+          object.value = value;
+        }
+        break;
+      case OpenUrlEventBase.urlPropertyKey:
+        if (object is OpenUrlEventBase) {
+          object.url = value;
+        }
+        break;
+      case TextValueRunBase.textPropertyKey:
+        if (object is TextValueRunBase) {
+          object.text = value;
         }
         break;
       case CustomPropertyStringBase.propertyValuePropertyKey:
@@ -1810,6 +2513,11 @@ class RiveCoreContext {
       case AssetBase.namePropertyKey:
         if (object is AssetBase) {
           object.name = value;
+        }
+        break;
+      case FileAssetBase.cdnBaseUrlPropertyKey:
+        if (object is FileAssetBase) {
+          object.cdnBaseUrl = value;
         }
         break;
     }
@@ -1882,6 +2590,16 @@ class RiveCoreContext {
           object.animationId = value;
         }
         break;
+      case SoloBase.activeComponentIdPropertyKey:
+        if (object is SoloBase) {
+          object.activeComponentId = value;
+        }
+        break;
+      case ListenerFireEventBase.eventIdPropertyKey:
+        if (object is ListenerFireEventBase) {
+          object.eventId = value;
+        }
+        break;
       case LinearAnimationBase.fpsPropertyKey:
         if (object is LinearAnimationBase) {
           object.fps = value;
@@ -1937,6 +2655,11 @@ class RiveCoreContext {
           object.inputId = value;
         }
         break;
+      case BlendAnimationDirectBase.blendSourcePropertyKey:
+        if (object is BlendAnimationDirectBase) {
+          object.blendSource = value;
+        }
+        break;
       case TransitionConditionBase.inputIdPropertyKey:
         if (object is TransitionConditionBase) {
           object.inputId = value;
@@ -1962,13 +2685,13 @@ class RiveCoreContext {
           object.frame = value;
         }
         break;
-      case KeyFrameBase.interpolationTypePropertyKey:
-        if (object is KeyFrameBase) {
+      case InterpolatingKeyFrameBase.interpolationTypePropertyKey:
+        if (object is InterpolatingKeyFrameBase) {
           object.interpolationType = value;
         }
         break;
-      case KeyFrameBase.interpolatorIdPropertyKey:
-        if (object is KeyFrameBase) {
+      case InterpolatingKeyFrameBase.interpolatorIdPropertyKey:
+        if (object is InterpolatingKeyFrameBase) {
           object.interpolatorId = value;
         }
         break;
@@ -2010,6 +2733,26 @@ class RiveCoreContext {
       case StateTransitionBase.exitTimePropertyKey:
         if (object is StateTransitionBase) {
           object.exitTime = value;
+        }
+        break;
+      case StateTransitionBase.interpolationTypePropertyKey:
+        if (object is StateTransitionBase) {
+          object.interpolationType = value;
+        }
+        break;
+      case StateTransitionBase.interpolatorIdPropertyKey:
+        if (object is StateTransitionBase) {
+          object.interpolatorId = value;
+        }
+        break;
+      case StateMachineFireEventBase.eventIdPropertyKey:
+        if (object is StateMachineFireEventBase) {
+          object.eventId = value;
+        }
+        break;
+      case StateMachineFireEventBase.occursValuePropertyKey:
+        if (object is StateMachineFireEventBase) {
+          object.occursValue = value;
         }
         break;
       case BlendState1DBase.inputIdPropertyKey:
@@ -2107,9 +2850,109 @@ class RiveCoreContext {
           object.defaultStateMachineId = value;
         }
         break;
+      case JoystickBase.xIdPropertyKey:
+        if (object is JoystickBase) {
+          object.xId = value;
+        }
+        break;
+      case JoystickBase.yIdPropertyKey:
+        if (object is JoystickBase) {
+          object.yId = value;
+        }
+        break;
+      case JoystickBase.joystickFlagsPropertyKey:
+        if (object is JoystickBase) {
+          object.joystickFlags = value;
+        }
+        break;
+      case JoystickBase.handleSourceIdPropertyKey:
+        if (object is JoystickBase) {
+          object.handleSourceId = value;
+        }
+        break;
+      case OpenUrlEventBase.targetValuePropertyKey:
+        if (object is OpenUrlEventBase) {
+          object.targetValue = value;
+        }
+        break;
       case TendonBase.boneIdPropertyKey:
         if (object is TendonBase) {
           object.boneId = value;
+        }
+        break;
+      case TextModifierRangeBase.unitsValuePropertyKey:
+        if (object is TextModifierRangeBase) {
+          object.unitsValue = value;
+        }
+        break;
+      case TextModifierRangeBase.typeValuePropertyKey:
+        if (object is TextModifierRangeBase) {
+          object.typeValue = value;
+        }
+        break;
+      case TextModifierRangeBase.modeValuePropertyKey:
+        if (object is TextModifierRangeBase) {
+          object.modeValue = value;
+        }
+        break;
+      case TextModifierRangeBase.runIdPropertyKey:
+        if (object is TextModifierRangeBase) {
+          object.runId = value;
+        }
+        break;
+      case TextStyleFeatureBase.tagPropertyKey:
+        if (object is TextStyleFeatureBase) {
+          object.tag = value;
+        }
+        break;
+      case TextStyleFeatureBase.featureValuePropertyKey:
+        if (object is TextStyleFeatureBase) {
+          object.featureValue = value;
+        }
+        break;
+      case TextVariationModifierBase.axisTagPropertyKey:
+        if (object is TextVariationModifierBase) {
+          object.axisTag = value;
+        }
+        break;
+      case TextModifierGroupBase.modifierFlagsPropertyKey:
+        if (object is TextModifierGroupBase) {
+          object.modifierFlags = value;
+        }
+        break;
+      case TextStyleBase.fontAssetIdPropertyKey:
+        if (object is TextStyleBase) {
+          object.fontAssetId = value;
+        }
+        break;
+      case TextStyleAxisBase.tagPropertyKey:
+        if (object is TextStyleAxisBase) {
+          object.tag = value;
+        }
+        break;
+      case TextBase.alignValuePropertyKey:
+        if (object is TextBase) {
+          object.alignValue = value;
+        }
+        break;
+      case TextBase.sizingValuePropertyKey:
+        if (object is TextBase) {
+          object.sizingValue = value;
+        }
+        break;
+      case TextBase.overflowValuePropertyKey:
+        if (object is TextBase) {
+          object.overflowValue = value;
+        }
+        break;
+      case TextBase.originValuePropertyKey:
+        if (object is TextBase) {
+          object.originValue = value;
+        }
+        break;
+      case TextValueRunBase.styleIdPropertyKey:
+        if (object is TextValueRunBase) {
+          object.styleId = value;
         }
         break;
       case FileAssetBase.assetIdPropertyKey:
@@ -2167,6 +3010,21 @@ class RiveCoreContext {
           object.maxValueY = value;
         }
         break;
+      case FollowPathConstraintBase.distancePropertyKey:
+        if (object is FollowPathConstraintBase) {
+          object.distance = value;
+        }
+        break;
+      case TransformConstraintBase.originXPropertyKey:
+        if (object is TransformConstraintBase) {
+          object.originX = value;
+        }
+        break;
+      case TransformConstraintBase.originYPropertyKey:
+        if (object is TransformConstraintBase) {
+          object.originY = value;
+        }
+        break;
       case WorldTransformComponentBase.opacityPropertyKey:
         if (object is WorldTransformComponentBase) {
           object.opacity = value;
@@ -2212,6 +3070,16 @@ class RiveCoreContext {
           object.speed = value;
         }
         break;
+      case AdvanceableStateBase.speedPropertyKey:
+        if (object is AdvanceableStateBase) {
+          object.speed = value;
+        }
+        break;
+      case BlendAnimationDirectBase.mixValuePropertyKey:
+        if (object is BlendAnimationDirectBase) {
+          object.mixValue = value;
+        }
+        break;
       case StateMachineNumberBase.valuePropertyKey:
         if (object is StateMachineNumberBase) {
           object.value = value;
@@ -2240,6 +3108,26 @@ class RiveCoreContext {
       case TransitionNumberConditionBase.valuePropertyKey:
         if (object is TransitionNumberConditionBase) {
           object.value = value;
+        }
+        break;
+      case CubicInterpolatorComponentBase.x1PropertyKey:
+        if (object is CubicInterpolatorComponentBase) {
+          object.x1 = value;
+        }
+        break;
+      case CubicInterpolatorComponentBase.y1PropertyKey:
+        if (object is CubicInterpolatorComponentBase) {
+          object.y1 = value;
+        }
+        break;
+      case CubicInterpolatorComponentBase.x2PropertyKey:
+        if (object is CubicInterpolatorComponentBase) {
+          object.x2 = value;
+        }
+        break;
+      case CubicInterpolatorComponentBase.y2PropertyKey:
+        if (object is CubicInterpolatorComponentBase) {
+          object.y2 = value;
         }
         break;
       case ListenerNumberChangeBase.valuePropertyKey:
@@ -2417,6 +3305,16 @@ class RiveCoreContext {
           object.innerRadius = value;
         }
         break;
+      case ImageBase.originXPropertyKey:
+        if (object is ImageBase) {
+          object.originX = value;
+        }
+        break;
+      case ImageBase.originYPropertyKey:
+        if (object is ImageBase) {
+          object.originY = value;
+        }
+        break;
       case CubicDetachedVertexBase.inRotationPropertyKey:
         if (object is CubicDetachedVertexBase) {
           object.inRotation = value;
@@ -2465,6 +3363,46 @@ class RiveCoreContext {
       case ArtboardBase.originYPropertyKey:
         if (object is ArtboardBase) {
           object.originY = value;
+        }
+        break;
+      case JoystickBase.xPropertyKey:
+        if (object is JoystickBase) {
+          object.x = value;
+        }
+        break;
+      case JoystickBase.yPropertyKey:
+        if (object is JoystickBase) {
+          object.y = value;
+        }
+        break;
+      case JoystickBase.posXPropertyKey:
+        if (object is JoystickBase) {
+          object.posX = value;
+        }
+        break;
+      case JoystickBase.posYPropertyKey:
+        if (object is JoystickBase) {
+          object.posY = value;
+        }
+        break;
+      case JoystickBase.originXPropertyKey:
+        if (object is JoystickBase) {
+          object.originX = value;
+        }
+        break;
+      case JoystickBase.originYPropertyKey:
+        if (object is JoystickBase) {
+          object.originY = value;
+        }
+        break;
+      case JoystickBase.widthPropertyKey:
+        if (object is JoystickBase) {
+          object.width = value;
+        }
+        break;
+      case JoystickBase.heightPropertyKey:
+        if (object is JoystickBase) {
+          object.height = value;
         }
         break;
       case BoneBase.lengthPropertyKey:
@@ -2542,6 +3480,126 @@ class RiveCoreContext {
           object.ty = value;
         }
         break;
+      case TextModifierRangeBase.modifyFromPropertyKey:
+        if (object is TextModifierRangeBase) {
+          object.modifyFrom = value;
+        }
+        break;
+      case TextModifierRangeBase.modifyToPropertyKey:
+        if (object is TextModifierRangeBase) {
+          object.modifyTo = value;
+        }
+        break;
+      case TextModifierRangeBase.strengthPropertyKey:
+        if (object is TextModifierRangeBase) {
+          object.strength = value;
+        }
+        break;
+      case TextModifierRangeBase.falloffFromPropertyKey:
+        if (object is TextModifierRangeBase) {
+          object.falloffFrom = value;
+        }
+        break;
+      case TextModifierRangeBase.falloffToPropertyKey:
+        if (object is TextModifierRangeBase) {
+          object.falloffTo = value;
+        }
+        break;
+      case TextModifierRangeBase.offsetPropertyKey:
+        if (object is TextModifierRangeBase) {
+          object.offset = value;
+        }
+        break;
+      case TextVariationModifierBase.axisValuePropertyKey:
+        if (object is TextVariationModifierBase) {
+          object.axisValue = value;
+        }
+        break;
+      case TextModifierGroupBase.originXPropertyKey:
+        if (object is TextModifierGroupBase) {
+          object.originX = value;
+        }
+        break;
+      case TextModifierGroupBase.originYPropertyKey:
+        if (object is TextModifierGroupBase) {
+          object.originY = value;
+        }
+        break;
+      case TextModifierGroupBase.opacityPropertyKey:
+        if (object is TextModifierGroupBase) {
+          object.opacity = value;
+        }
+        break;
+      case TextModifierGroupBase.xPropertyKey:
+        if (object is TextModifierGroupBase) {
+          object.x = value;
+        }
+        break;
+      case TextModifierGroupBase.yPropertyKey:
+        if (object is TextModifierGroupBase) {
+          object.y = value;
+        }
+        break;
+      case TextModifierGroupBase.rotationPropertyKey:
+        if (object is TextModifierGroupBase) {
+          object.rotation = value;
+        }
+        break;
+      case TextModifierGroupBase.scaleXPropertyKey:
+        if (object is TextModifierGroupBase) {
+          object.scaleX = value;
+        }
+        break;
+      case TextModifierGroupBase.scaleYPropertyKey:
+        if (object is TextModifierGroupBase) {
+          object.scaleY = value;
+        }
+        break;
+      case TextStyleBase.fontSizePropertyKey:
+        if (object is TextStyleBase) {
+          object.fontSize = value;
+        }
+        break;
+      case TextStyleBase.lineHeightPropertyKey:
+        if (object is TextStyleBase) {
+          object.lineHeight = value;
+        }
+        break;
+      case TextStyleBase.letterSpacingPropertyKey:
+        if (object is TextStyleBase) {
+          object.letterSpacing = value;
+        }
+        break;
+      case TextStyleAxisBase.axisValuePropertyKey:
+        if (object is TextStyleAxisBase) {
+          object.axisValue = value;
+        }
+        break;
+      case TextBase.widthPropertyKey:
+        if (object is TextBase) {
+          object.width = value;
+        }
+        break;
+      case TextBase.heightPropertyKey:
+        if (object is TextBase) {
+          object.height = value;
+        }
+        break;
+      case TextBase.originXPropertyKey:
+        if (object is TextBase) {
+          object.originX = value;
+        }
+        break;
+      case TextBase.originYPropertyKey:
+        if (object is TextBase) {
+          object.originY = value;
+        }
+        break;
+      case TextBase.paragraphSpacingPropertyKey:
+        if (object is TextBase) {
+          object.paragraphSpacing = value;
+        }
+        break;
       case DrawableAssetBase.heightPropertyKey:
         if (object is DrawableAssetBase) {
           object.height = value;
@@ -2597,9 +3655,24 @@ class RiveCoreContext {
           object.invertDirection = value;
         }
         break;
+      case FollowPathConstraintBase.orientPropertyKey:
+        if (object is FollowPathConstraintBase) {
+          object.orient = value;
+        }
+        break;
+      case FollowPathConstraintBase.offsetPropertyKey:
+        if (object is FollowPathConstraintBase) {
+          object.offset = value;
+        }
+        break;
       case LinearAnimationBase.enableWorkAreaPropertyKey:
         if (object is LinearAnimationBase) {
           object.enableWorkArea = value;
+        }
+        break;
+      case LinearAnimationBase.quantizePropertyKey:
+        if (object is LinearAnimationBase) {
+          object.quantize = value;
         }
         break;
       case NestedSimpleAnimationBase.isPlayingPropertyKey:
@@ -2657,6 +3730,11 @@ class RiveCoreContext {
           object.clip = value;
         }
         break;
+      case TextModifierRangeBase.clampPropertyKey:
+        if (object is TextModifierRangeBase) {
+          object.clamp = value;
+        }
+        break;
     }
   }
 
@@ -2687,9 +3765,24 @@ class RiveCoreContext {
           object.triangleIndexBytes = value;
         }
         break;
+      case FileAssetBase.cdnUuidPropertyKey:
+        if (object is FileAssetBase) {
+          object.cdnUuid = value;
+        }
+        break;
       case FileAssetContentsBase.bytesPropertyKey:
         if (object is FileAssetContentsBase) {
           object.bytes = value;
+        }
+        break;
+    }
+  }
+
+  static void setCallback(Core object, int propertyKey, CallbackData value) {
+    switch (propertyKey) {
+      case EventBase.triggerPropertyKey:
+        if (object is EventBase) {
+          object.trigger(value);
         }
         break;
     }

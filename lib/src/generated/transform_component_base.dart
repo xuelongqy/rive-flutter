@@ -1,7 +1,8 @@
-/// Core automatically generated
-/// lib/src/generated/transform_component_base.dart.
-/// Do not modify manually.
+// Core automatically generated
+// lib/src/generated/transform_component_base.dart.
+// Do not modify manually.
 
+import 'package:rive/src/core/core.dart';
 import 'package:rive/src/generated/component_base.dart';
 import 'package:rive/src/generated/container_component_base.dart';
 import 'package:rive/src/rive_core/world_transform_component.dart';
@@ -20,9 +21,9 @@ abstract class TransformComponentBase extends WorldTransformComponent {
 
   /// --------------------------------------------------------------------------
   /// Rotation field with key 15.
+  static const int rotationPropertyKey = 15;
   static const double rotationInitialValue = 0;
   double _rotation = rotationInitialValue;
-  static const int rotationPropertyKey = 15;
   double get rotation => _rotation;
 
   /// Change the [_rotation] field value.
@@ -42,9 +43,9 @@ abstract class TransformComponentBase extends WorldTransformComponent {
 
   /// --------------------------------------------------------------------------
   /// ScaleX field with key 16.
+  static const int scaleXPropertyKey = 16;
   static const double scaleXInitialValue = 1;
   double _scaleX = scaleXInitialValue;
-  static const int scaleXPropertyKey = 16;
   double get scaleX => _scaleX;
 
   /// Change the [_scaleX] field value.
@@ -64,9 +65,9 @@ abstract class TransformComponentBase extends WorldTransformComponent {
 
   /// --------------------------------------------------------------------------
   /// ScaleY field with key 17.
+  static const int scaleYPropertyKey = 17;
   static const double scaleYInitialValue = 1;
   double _scaleY = scaleYInitialValue;
-  static const int scaleYPropertyKey = 17;
   double get scaleY => _scaleY;
 
   /// Change the [_scaleY] field value.
@@ -85,10 +86,12 @@ abstract class TransformComponentBase extends WorldTransformComponent {
   void scaleYChanged(double from, double to);
 
   @override
-  void copy(covariant TransformComponentBase source) {
+  void copy(Core source) {
     super.copy(source);
-    _rotation = source._rotation;
-    _scaleX = source._scaleX;
-    _scaleY = source._scaleY;
+    if (source is TransformComponentBase) {
+      _rotation = source._rotation;
+      _scaleX = source._scaleX;
+      _scaleY = source._scaleY;
+    }
   }
 }

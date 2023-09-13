@@ -1,22 +1,27 @@
-/// Core automatically generated
-/// lib/src/generated/custom_property_number_base.dart.
-/// Do not modify manually.
+// Core automatically generated
+// lib/src/generated/custom_property_number_base.dart.
+// Do not modify manually.
 
-import 'package:rive/src/rive_core/component.dart';
+import 'package:rive/src/core/core.dart';
+import 'package:rive/src/generated/component_base.dart';
+import 'package:rive/src/rive_core/custom_property.dart';
 
-abstract class CustomPropertyNumberBase extends Component {
+abstract class CustomPropertyNumberBase extends CustomProperty {
   static const int typeKey = 127;
   @override
   int get coreType => CustomPropertyNumberBase.typeKey;
   @override
-  Set<int> get coreTypes =>
-      {CustomPropertyNumberBase.typeKey, ComponentBase.typeKey};
+  Set<int> get coreTypes => {
+        CustomPropertyNumberBase.typeKey,
+        CustomPropertyBase.typeKey,
+        ComponentBase.typeKey
+      };
 
   /// --------------------------------------------------------------------------
   /// PropertyValue field with key 243.
+  static const int propertyValuePropertyKey = 243;
   static const double propertyValueInitialValue = 0;
   double _propertyValue = propertyValueInitialValue;
-  static const int propertyValuePropertyKey = 243;
   double get propertyValue => _propertyValue;
 
   /// Change the [_propertyValue] field value.
@@ -36,8 +41,10 @@ abstract class CustomPropertyNumberBase extends Component {
   void propertyValueChanged(double from, double to);
 
   @override
-  void copy(covariant CustomPropertyNumberBase source) {
+  void copy(Core source) {
     super.copy(source);
-    _propertyValue = source._propertyValue;
+    if (source is CustomPropertyNumberBase) {
+      _propertyValue = source._propertyValue;
+    }
   }
 }

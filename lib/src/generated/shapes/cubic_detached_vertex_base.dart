@@ -1,7 +1,8 @@
-/// Core automatically generated
-/// lib/src/generated/shapes/cubic_detached_vertex_base.dart.
-/// Do not modify manually.
+// Core automatically generated
+// lib/src/generated/shapes/cubic_detached_vertex_base.dart.
+// Do not modify manually.
 
+import 'package:rive/src/core/core.dart';
 import 'package:rive/src/generated/component_base.dart';
 import 'package:rive/src/generated/container_component_base.dart';
 import 'package:rive/src/generated/shapes/path_vertex_base.dart';
@@ -24,9 +25,9 @@ abstract class CubicDetachedVertexBase extends CubicVertex {
 
   /// --------------------------------------------------------------------------
   /// InRotation field with key 84.
+  static const int inRotationPropertyKey = 84;
   static const double inRotationInitialValue = 0;
   double _inRotation = inRotationInitialValue;
-  static const int inRotationPropertyKey = 84;
 
   /// The in point's angle.
   double get inRotation => _inRotation;
@@ -48,9 +49,9 @@ abstract class CubicDetachedVertexBase extends CubicVertex {
 
   /// --------------------------------------------------------------------------
   /// InDistance field with key 85.
+  static const int inDistancePropertyKey = 85;
   static const double inDistanceInitialValue = 0;
   double _inDistance = inDistanceInitialValue;
-  static const int inDistancePropertyKey = 85;
 
   /// The in point's distance from the translation of the point.
   double get inDistance => _inDistance;
@@ -72,9 +73,9 @@ abstract class CubicDetachedVertexBase extends CubicVertex {
 
   /// --------------------------------------------------------------------------
   /// OutRotation field with key 86.
+  static const int outRotationPropertyKey = 86;
   static const double outRotationInitialValue = 0;
   double _outRotation = outRotationInitialValue;
-  static const int outRotationPropertyKey = 86;
 
   /// The out point's angle.
   double get outRotation => _outRotation;
@@ -97,9 +98,9 @@ abstract class CubicDetachedVertexBase extends CubicVertex {
 
   /// --------------------------------------------------------------------------
   /// OutDistance field with key 87.
+  static const int outDistancePropertyKey = 87;
   static const double outDistanceInitialValue = 0;
   double _outDistance = outDistanceInitialValue;
-  static const int outDistancePropertyKey = 87;
 
   /// The out point's distance from the translation of the point.
   double get outDistance => _outDistance;
@@ -121,11 +122,13 @@ abstract class CubicDetachedVertexBase extends CubicVertex {
   void outDistanceChanged(double from, double to);
 
   @override
-  void copy(covariant CubicDetachedVertexBase source) {
+  void copy(Core source) {
     super.copy(source);
-    _inRotation = source._inRotation;
-    _inDistance = source._inDistance;
-    _outRotation = source._outRotation;
-    _outDistance = source._outDistance;
+    if (source is CubicDetachedVertexBase) {
+      _inRotation = source._inRotation;
+      _inDistance = source._inDistance;
+      _outRotation = source._outRotation;
+      _outDistance = source._outDistance;
+    }
   }
 }

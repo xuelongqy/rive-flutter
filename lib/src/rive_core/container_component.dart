@@ -4,6 +4,8 @@ import 'package:rive/src/rive_core/component.dart';
 import 'package:rive/src/rive_core/draw_rules.dart';
 import 'package:rive/src/rive_core/drawable.dart';
 
+export 'package:rive/src/core/core.dart';
+
 typedef bool DescentCallback(Component component);
 
 abstract class ContainerComponent extends ContainerComponentBase {
@@ -20,7 +22,9 @@ abstract class ContainerComponent extends ContainerComponentBase {
   }
 
   @mustCallSuper
-  void childAdded(Component child) {}
+  void childAdded(Component child) {
+    propagateCollapseToChildren(isCollapsed);
+  }
 
   void childRemoved(Component child) {}
 
@@ -68,5 +72,21 @@ abstract class ContainerComponent extends ContainerComponentBase {
         child.buildDrawOrder(drawables, rules, allRules);
       }
     }
+  }
+
+  @protected
+  void propagateCollapseToChildren(bool collapse) {
+    for (final child in children) {
+      child.propagateCollapse(collapse);
+    }
+  }
+
+  @override
+  bool propagateCollapse(bool collapse) {
+    if (!super.propagateCollapse(collapse)) {
+      return false;
+    }
+    propagateCollapseToChildren(collapse);
+    return true;
   }
 }

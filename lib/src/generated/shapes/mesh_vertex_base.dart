@@ -1,6 +1,7 @@
-/// Core automatically generated lib/src/generated/shapes/mesh_vertex_base.dart.
-/// Do not modify manually.
+// Core automatically generated lib/src/generated/shapes/mesh_vertex_base.dart.
+// Do not modify manually.
 
+import 'package:rive/src/core/core.dart';
 import 'package:rive/src/generated/component_base.dart';
 import 'package:rive/src/generated/container_component_base.dart';
 import 'package:rive/src/rive_core/shapes/vertex.dart';
@@ -19,9 +20,9 @@ abstract class MeshVertexBase extends Vertex {
 
   /// --------------------------------------------------------------------------
   /// U field with key 215.
+  static const int uPropertyKey = 215;
   static const double uInitialValue = 0;
   double _u = uInitialValue;
-  static const int uPropertyKey = 215;
 
   /// U value for the texture coordinate of the vertex.
   double get u => _u;
@@ -43,9 +44,9 @@ abstract class MeshVertexBase extends Vertex {
 
   /// --------------------------------------------------------------------------
   /// V field with key 216.
+  static const int vPropertyKey = 216;
   static const double vInitialValue = 0;
   double _v = vInitialValue;
-  static const int vPropertyKey = 216;
 
   /// V value for the texture coordinate of the vertex.
   double get v => _v;
@@ -66,9 +67,11 @@ abstract class MeshVertexBase extends Vertex {
   void vChanged(double from, double to);
 
   @override
-  void copy(covariant MeshVertexBase source) {
+  void copy(Core source) {
     super.copy(source);
-    _u = source._u;
-    _v = source._v;
+    if (source is MeshVertexBase) {
+      _u = source._u;
+      _v = source._v;
+    }
   }
 }

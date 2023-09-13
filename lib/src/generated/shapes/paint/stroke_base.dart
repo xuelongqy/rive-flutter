@@ -1,7 +1,8 @@
-/// Core automatically generated
-/// lib/src/generated/shapes/paint/stroke_base.dart.
-/// Do not modify manually.
+// Core automatically generated
+// lib/src/generated/shapes/paint/stroke_base.dart.
+// Do not modify manually.
 
+import 'package:rive/src/core/core.dart';
 import 'package:rive/src/generated/component_base.dart';
 import 'package:rive/src/generated/container_component_base.dart';
 import 'package:rive/src/rive_core/shapes/paint/shape_paint.dart';
@@ -20,9 +21,9 @@ abstract class StrokeBase extends ShapePaint {
 
   /// --------------------------------------------------------------------------
   /// Thickness field with key 47.
+  static const int thicknessPropertyKey = 47;
   static const double thicknessInitialValue = 1;
   double _thickness = thicknessInitialValue;
-  static const int thicknessPropertyKey = 47;
   double get thickness => _thickness;
 
   /// Change the [_thickness] field value.
@@ -42,9 +43,9 @@ abstract class StrokeBase extends ShapePaint {
 
   /// --------------------------------------------------------------------------
   /// Cap field with key 48.
+  static const int capPropertyKey = 48;
   static const int capInitialValue = 0;
   int _cap = capInitialValue;
-  static const int capPropertyKey = 48;
   int get cap => _cap;
 
   /// Change the [_cap] field value.
@@ -64,9 +65,9 @@ abstract class StrokeBase extends ShapePaint {
 
   /// --------------------------------------------------------------------------
   /// Join field with key 49.
+  static const int joinPropertyKey = 49;
   static const int joinInitialValue = 0;
   int _join = joinInitialValue;
-  static const int joinPropertyKey = 49;
   int get join => _join;
 
   /// Change the [_join] field value.
@@ -86,9 +87,9 @@ abstract class StrokeBase extends ShapePaint {
 
   /// --------------------------------------------------------------------------
   /// TransformAffectsStroke field with key 50.
+  static const int transformAffectsStrokePropertyKey = 50;
   static const bool transformAffectsStrokeInitialValue = true;
   bool _transformAffectsStroke = transformAffectsStrokeInitialValue;
-  static const int transformAffectsStrokePropertyKey = 50;
   bool get transformAffectsStroke => _transformAffectsStroke;
 
   /// Change the [_transformAffectsStroke] field value.
@@ -108,11 +109,13 @@ abstract class StrokeBase extends ShapePaint {
   void transformAffectsStrokeChanged(bool from, bool to);
 
   @override
-  void copy(covariant StrokeBase source) {
+  void copy(Core source) {
     super.copy(source);
-    _thickness = source._thickness;
-    _cap = source._cap;
-    _join = source._join;
-    _transformAffectsStroke = source._transformAffectsStroke;
+    if (source is StrokeBase) {
+      _thickness = source._thickness;
+      _cap = source._cap;
+      _join = source._join;
+      _transformAffectsStroke = source._transformAffectsStroke;
+    }
   }
 }

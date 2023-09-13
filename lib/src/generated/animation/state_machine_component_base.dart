@@ -1,6 +1,6 @@
-/// Core automatically generated
-/// lib/src/generated/animation/state_machine_component_base.dart.
-/// Do not modify manually.
+// Core automatically generated
+// lib/src/generated/animation/state_machine_component_base.dart.
+// Do not modify manually.
 
 import 'package:rive/src/core/core.dart';
 
@@ -14,9 +14,9 @@ abstract class StateMachineComponentBase<T extends CoreContext>
 
   /// --------------------------------------------------------------------------
   /// Name field with key 138.
+  static const int namePropertyKey = 138;
   static const String nameInitialValue = '';
   String _name = nameInitialValue;
-  static const int namePropertyKey = 138;
 
   /// Non-unique identifier, used to give friendly names to state machine
   /// components (like layers or inputs).
@@ -38,7 +38,9 @@ abstract class StateMachineComponentBase<T extends CoreContext>
   void nameChanged(String from, String to);
 
   @override
-  void copy(covariant StateMachineComponentBase source) {
-    _name = source._name;
+  void copy(Core source) {
+    if (source is StateMachineComponentBase) {
+      _name = source._name;
+    }
   }
 }

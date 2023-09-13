@@ -1,6 +1,7 @@
-/// Core automatically generated lib/src/generated/bones/weight_base.dart.
-/// Do not modify manually.
+// Core automatically generated lib/src/generated/bones/weight_base.dart.
+// Do not modify manually.
 
+import 'package:rive/src/core/core.dart';
 import 'package:rive/src/rive_core/component.dart';
 
 abstract class WeightBase extends Component {
@@ -12,9 +13,9 @@ abstract class WeightBase extends Component {
 
   /// --------------------------------------------------------------------------
   /// Values field with key 102.
+  static const int valuesPropertyKey = 102;
   static const int valuesInitialValue = 255;
   int _values = valuesInitialValue;
-  static const int valuesPropertyKey = 102;
   int get values => _values;
 
   /// Change the [_values] field value.
@@ -34,9 +35,9 @@ abstract class WeightBase extends Component {
 
   /// --------------------------------------------------------------------------
   /// Indices field with key 103.
+  static const int indicesPropertyKey = 103;
   static const int indicesInitialValue = 1;
   int _indices = indicesInitialValue;
-  static const int indicesPropertyKey = 103;
   int get indices => _indices;
 
   /// Change the [_indices] field value.
@@ -55,9 +56,11 @@ abstract class WeightBase extends Component {
   void indicesChanged(int from, int to);
 
   @override
-  void copy(covariant WeightBase source) {
+  void copy(Core source) {
     super.copy(source);
-    _values = source._values;
-    _indices = source._indices;
+    if (source is WeightBase) {
+      _values = source._values;
+      _indices = source._indices;
+    }
   }
 }

@@ -38,12 +38,19 @@ class Shape extends ShapeBase with ShapePaintContainer {
 
   AABB get worldBounds => _worldBounds ??= computeWorldBounds();
 
+  @override
   AABB get localBounds => _localBounds ??= computeLocalBounds();
 
   /// Let the shape know that any further call to get world/local bounds will
   /// need to rebuild the cached bounds.
   void markBoundsDirty() {
     _worldBounds = _localBounds = null;
+  }
+
+  @override
+  void onDirty(int mask) {
+    pathComposer.syncCollapse();
+    super.onDirty(mask);
   }
 
   bool addPath(Path path) {
@@ -55,6 +62,9 @@ class Shape extends ShapeBase with ShapePaintContainer {
 
   void _markComposerDirty() {
     pathComposer.addDirt(ComponentDirt.path, recurse: true);
+    for (final constraint in constraints) {
+      constraint.addDirt(ComponentDirt.path);
+    }
     // Stroke effects need to be rebuilt whenever the path composer rebuilds the
     // compound path.
     invalidateStrokeEffects();

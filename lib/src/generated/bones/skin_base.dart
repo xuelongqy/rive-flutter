@@ -1,5 +1,5 @@
-/// Core automatically generated lib/src/generated/bones/skin_base.dart.
-/// Do not modify manually.
+// Core automatically generated lib/src/generated/bones/skin_base.dart.
+// Do not modify manually.
 
 import 'package:rive/src/generated/component_base.dart';
 import 'package:rive/src/generated/container_component_base.dart';
@@ -15,9 +15,9 @@ abstract class SkinBase extends ContainerComponent {
 
   /// --------------------------------------------------------------------------
   /// Xx field with key 104.
+  static const int xxPropertyKey = 104;
   static const double xxInitialValue = 1;
   double _xx = xxInitialValue;
-  static const int xxPropertyKey = 104;
 
   /// x component of x unit vector in the bind transform
   double get xx => _xx;
@@ -39,9 +39,9 @@ abstract class SkinBase extends ContainerComponent {
 
   /// --------------------------------------------------------------------------
   /// Yx field with key 105.
+  static const int yxPropertyKey = 105;
   static const double yxInitialValue = 0;
   double _yx = yxInitialValue;
-  static const int yxPropertyKey = 105;
 
   /// y component of x unit vector in the bind transform
   double get yx => _yx;
@@ -63,9 +63,9 @@ abstract class SkinBase extends ContainerComponent {
 
   /// --------------------------------------------------------------------------
   /// Xy field with key 106.
+  static const int xyPropertyKey = 106;
   static const double xyInitialValue = 0;
   double _xy = xyInitialValue;
-  static const int xyPropertyKey = 106;
 
   /// x component of y unit vector in the bind transform
   double get xy => _xy;
@@ -87,9 +87,9 @@ abstract class SkinBase extends ContainerComponent {
 
   /// --------------------------------------------------------------------------
   /// Yy field with key 107.
+  static const int yyPropertyKey = 107;
   static const double yyInitialValue = 1;
   double _yy = yyInitialValue;
-  static const int yyPropertyKey = 107;
 
   /// y component of y unit vector in the bind transform
   double get yy => _yy;
@@ -111,9 +111,9 @@ abstract class SkinBase extends ContainerComponent {
 
   /// --------------------------------------------------------------------------
   /// Tx field with key 108.
+  static const int txPropertyKey = 108;
   static const double txInitialValue = 0;
   double _tx = txInitialValue;
-  static const int txPropertyKey = 108;
 
   /// x position component of the bind transform
   double get tx => _tx;
@@ -135,9 +135,9 @@ abstract class SkinBase extends ContainerComponent {
 
   /// --------------------------------------------------------------------------
   /// Ty field with key 109.
+  static const int tyPropertyKey = 109;
   static const double tyInitialValue = 0;
   double _ty = tyInitialValue;
-  static const int tyPropertyKey = 109;
 
   /// y position component of the bind transform
   double get ty => _ty;
@@ -158,13 +158,15 @@ abstract class SkinBase extends ContainerComponent {
   void tyChanged(double from, double to);
 
   @override
-  void copy(covariant SkinBase source) {
+  void copy(Core source) {
     super.copy(source);
-    _xx = source._xx;
-    _yx = source._yx;
-    _xy = source._xy;
-    _yy = source._yy;
-    _tx = source._tx;
-    _ty = source._ty;
+    if (source is SkinBase) {
+      _xx = source._xx;
+      _yx = source._yx;
+      _xy = source._xy;
+      _yy = source._yy;
+      _tx = source._tx;
+      _ty = source._ty;
+    }
   }
 }

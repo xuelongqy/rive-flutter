@@ -5,7 +5,7 @@
 
 # Rive Flutter
 
-![Rive hero image](https://rive-app.notion.site/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fff44ed5f-1eea-4154-81ef-84547e61c3fd%2Frive_notion.png?table=block&id=f198cab2-c0bc-4ce8-970c-42220379bcf3&spaceId=9c949665-9ad9-445f-b9c4-5ee204f8b60c&width=2000&userId=&cache=v2)
+![Rive hero image](https://cdn.rive.app/rive_logo_dark_bg.png)
 
 Rive Flutter is a runtime library for [Rive](https://rive.app), a real-time interactive design and animation tool.
 
@@ -46,6 +46,10 @@ For additional help, see the Runtime sections of the Rive help documentation, su
 ## Supported Platforms
 
 Be sure to read the [platform specific considerations](platform_considerations.md) for the Rive Flutter package.
+
+### Awesome Rive
+
+For even more examples and resources on using Rive at runtime or in other tools, checkout the [awesome-rive](https://github.com/rive-app/awesome-rive) repo.
 
 ## Examples
 

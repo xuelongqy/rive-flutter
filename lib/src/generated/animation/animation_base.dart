@@ -1,6 +1,6 @@
-/// Core automatically generated
-/// lib/src/generated/animation/animation_base.dart.
-/// Do not modify manually.
+// Core automatically generated
+// lib/src/generated/animation/animation_base.dart.
+// Do not modify manually.
 
 import 'package:rive/src/core/core.dart';
 
@@ -13,9 +13,9 @@ abstract class AnimationBase<T extends CoreContext> extends Core<T> {
 
   /// --------------------------------------------------------------------------
   /// Name field with key 55.
+  static const int namePropertyKey = 55;
   static const String nameInitialValue = '';
   String _name = nameInitialValue;
-  static const int namePropertyKey = 55;
 
   /// Name of the animation.
   String get name => _name;
@@ -36,7 +36,9 @@ abstract class AnimationBase<T extends CoreContext> extends Core<T> {
   void nameChanged(String from, String to);
 
   @override
-  void copy(covariant AnimationBase source) {
-    _name = source._name;
+  void copy(Core source) {
+    if (source is AnimationBase) {
+      _name = source._name;
+    }
   }
 }

@@ -1,6 +1,6 @@
-/// Core automatically generated
-/// lib/src/generated/animation/transition_condition_base.dart.
-/// Do not modify manually.
+// Core automatically generated
+// lib/src/generated/animation/transition_condition_base.dart.
+// Do not modify manually.
 
 import 'package:rive/src/core/core.dart';
 
@@ -13,9 +13,9 @@ abstract class TransitionConditionBase<T extends CoreContext> extends Core<T> {
 
   /// --------------------------------------------------------------------------
   /// InputId field with key 155.
+  static const int inputIdPropertyKey = 155;
   static const int inputIdInitialValue = -1;
   int _inputId = inputIdInitialValue;
-  static const int inputIdPropertyKey = 155;
 
   /// Id of the StateMachineInput referenced.
   int get inputId => _inputId;
@@ -36,7 +36,9 @@ abstract class TransitionConditionBase<T extends CoreContext> extends Core<T> {
   void inputIdChanged(int from, int to);
 
   @override
-  void copy(covariant TransitionConditionBase source) {
-    _inputId = source._inputId;
+  void copy(Core source) {
+    if (source is TransitionConditionBase) {
+      _inputId = source._inputId;
+    }
   }
 }

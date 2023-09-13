@@ -1,7 +1,8 @@
-/// Core automatically generated
-/// lib/src/generated/animation/state_transition_base.dart.
-/// Do not modify manually.
+// Core automatically generated
+// lib/src/generated/animation/state_transition_base.dart.
+// Do not modify manually.
 
+import 'package:rive/src/core/core.dart';
 import 'package:rive/src/rive_core/animation/state_machine_layer_component.dart';
 
 abstract class StateTransitionBase extends StateMachineLayerComponent {
@@ -14,9 +15,9 @@ abstract class StateTransitionBase extends StateMachineLayerComponent {
 
   /// --------------------------------------------------------------------------
   /// StateToId field with key 151.
+  static const int stateToIdPropertyKey = 151;
   static const int stateToIdInitialValue = -1;
   int _stateToId = stateToIdInitialValue;
-  static const int stateToIdPropertyKey = 151;
 
   /// Id of the state this transition originates from.
   int get stateToId => _stateToId;
@@ -38,9 +39,9 @@ abstract class StateTransitionBase extends StateMachineLayerComponent {
 
   /// --------------------------------------------------------------------------
   /// Flags field with key 152.
+  static const int flagsPropertyKey = 152;
   static const int flagsInitialValue = 0;
   int _flags = flagsInitialValue;
-  static const int flagsPropertyKey = 152;
   int get flags => _flags;
 
   /// Change the [_flags] field value.
@@ -60,9 +61,9 @@ abstract class StateTransitionBase extends StateMachineLayerComponent {
 
   /// --------------------------------------------------------------------------
   /// Duration field with key 158.
+  static const int durationPropertyKey = 158;
   static const int durationInitialValue = 0;
   int _duration = durationInitialValue;
-  static const int durationPropertyKey = 158;
 
   /// Duration of the trasition (mix time) in milliseconds or percentage (0-100)
   /// based on flags.
@@ -85,9 +86,9 @@ abstract class StateTransitionBase extends StateMachineLayerComponent {
 
   /// --------------------------------------------------------------------------
   /// ExitTime field with key 160.
+  static const int exitTimePropertyKey = 160;
   static const int exitTimeInitialValue = 0;
   int _exitTime = exitTimeInitialValue;
-  static const int exitTimePropertyKey = 160;
 
   /// Duration in milliseconds that must elapse before allowing the state to
   /// change. If the flags mark this property as being percentage based, the
@@ -109,12 +110,67 @@ abstract class StateTransitionBase extends StateMachineLayerComponent {
 
   void exitTimeChanged(int from, int to);
 
+  /// --------------------------------------------------------------------------
+  /// InterpolationType field with key 349.
+  static const int interpolationTypePropertyKey = 349;
+  static const int interpolationTypeInitialValue = 1;
+  int _interpolationType = interpolationTypeInitialValue;
+
+  /// The type of interpolation index in Interpolation applied to this state
+  /// transition ('linear' by default).
+  int get interpolationType => _interpolationType;
+
+  /// Change the [_interpolationType] field value.
+  /// [interpolationTypeChanged] will be invoked only if the field's value has
+  /// changed.
+  set interpolationType(int value) {
+    if (_interpolationType == value) {
+      return;
+    }
+    int from = _interpolationType;
+    _interpolationType = value;
+    if (hasValidated) {
+      interpolationTypeChanged(from, value);
+    }
+  }
+
+  void interpolationTypeChanged(int from, int to);
+
+  /// --------------------------------------------------------------------------
+  /// InterpolatorId field with key 350.
+  static const int interpolatorIdPropertyKey = 350;
+  static const int interpolatorIdInitialValue = -1;
+  int _interpolatorId = interpolatorIdInitialValue;
+
+  /// The id of the custom interpolator used when interpolation is Cubic.
+  int get interpolatorId => _interpolatorId;
+
+  /// Change the [_interpolatorId] field value.
+  /// [interpolatorIdChanged] will be invoked only if the field's value has
+  /// changed.
+  set interpolatorId(int value) {
+    if (_interpolatorId == value) {
+      return;
+    }
+    int from = _interpolatorId;
+    _interpolatorId = value;
+    if (hasValidated) {
+      interpolatorIdChanged(from, value);
+    }
+  }
+
+  void interpolatorIdChanged(int from, int to);
+
   @override
-  void copy(covariant StateTransitionBase source) {
+  void copy(Core source) {
     super.copy(source);
-    _stateToId = source._stateToId;
-    _flags = source._flags;
-    _duration = source._duration;
-    _exitTime = source._exitTime;
+    if (source is StateTransitionBase) {
+      _stateToId = source._stateToId;
+      _flags = source._flags;
+      _duration = source._duration;
+      _exitTime = source._exitTime;
+      _interpolationType = source._interpolationType;
+      _interpolatorId = source._interpolatorId;
+    }
   }
 }

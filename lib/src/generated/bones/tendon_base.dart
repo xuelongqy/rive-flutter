@@ -1,6 +1,7 @@
-/// Core automatically generated lib/src/generated/bones/tendon_base.dart.
-/// Do not modify manually.
+// Core automatically generated lib/src/generated/bones/tendon_base.dart.
+// Do not modify manually.
 
+import 'package:rive/src/core/core.dart';
 import 'package:rive/src/rive_core/component.dart';
 
 abstract class TendonBase extends Component {
@@ -12,9 +13,9 @@ abstract class TendonBase extends Component {
 
   /// --------------------------------------------------------------------------
   /// BoneId field with key 95.
+  static const int boneIdPropertyKey = 95;
   static const int boneIdInitialValue = -1;
   int _boneId = boneIdInitialValue;
-  static const int boneIdPropertyKey = 95;
 
   /// Identifier used to track the bone this tendon connects to.
   int get boneId => _boneId;
@@ -36,9 +37,9 @@ abstract class TendonBase extends Component {
 
   /// --------------------------------------------------------------------------
   /// Xx field with key 96.
+  static const int xxPropertyKey = 96;
   static const double xxInitialValue = 1;
   double _xx = xxInitialValue;
-  static const int xxPropertyKey = 96;
 
   /// x component of x unit vector in the bind transform
   double get xx => _xx;
@@ -60,9 +61,9 @@ abstract class TendonBase extends Component {
 
   /// --------------------------------------------------------------------------
   /// Yx field with key 97.
+  static const int yxPropertyKey = 97;
   static const double yxInitialValue = 0;
   double _yx = yxInitialValue;
-  static const int yxPropertyKey = 97;
 
   /// y component of x unit vector in the bind transform
   double get yx => _yx;
@@ -84,9 +85,9 @@ abstract class TendonBase extends Component {
 
   /// --------------------------------------------------------------------------
   /// Xy field with key 98.
+  static const int xyPropertyKey = 98;
   static const double xyInitialValue = 0;
   double _xy = xyInitialValue;
-  static const int xyPropertyKey = 98;
 
   /// x component of y unit vector in the bind transform
   double get xy => _xy;
@@ -108,9 +109,9 @@ abstract class TendonBase extends Component {
 
   /// --------------------------------------------------------------------------
   /// Yy field with key 99.
+  static const int yyPropertyKey = 99;
   static const double yyInitialValue = 1;
   double _yy = yyInitialValue;
-  static const int yyPropertyKey = 99;
 
   /// y component of y unit vector in the bind transform
   double get yy => _yy;
@@ -132,9 +133,9 @@ abstract class TendonBase extends Component {
 
   /// --------------------------------------------------------------------------
   /// Tx field with key 100.
+  static const int txPropertyKey = 100;
   static const double txInitialValue = 0;
   double _tx = txInitialValue;
-  static const int txPropertyKey = 100;
 
   /// x position component of the bind transform
   double get tx => _tx;
@@ -156,9 +157,9 @@ abstract class TendonBase extends Component {
 
   /// --------------------------------------------------------------------------
   /// Ty field with key 101.
+  static const int tyPropertyKey = 101;
   static const double tyInitialValue = 0;
   double _ty = tyInitialValue;
-  static const int tyPropertyKey = 101;
 
   /// y position component of the bind transform
   double get ty => _ty;
@@ -179,14 +180,16 @@ abstract class TendonBase extends Component {
   void tyChanged(double from, double to);
 
   @override
-  void copy(covariant TendonBase source) {
+  void copy(Core source) {
     super.copy(source);
-    _boneId = source._boneId;
-    _xx = source._xx;
-    _yx = source._yx;
-    _xy = source._xy;
-    _yy = source._yy;
-    _tx = source._tx;
-    _ty = source._ty;
+    if (source is TendonBase) {
+      _boneId = source._boneId;
+      _xx = source._xx;
+      _yx = source._yx;
+      _xy = source._xy;
+      _yy = source._yy;
+      _tx = source._tx;
+      _ty = source._ty;
+    }
   }
 }

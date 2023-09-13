@@ -1,6 +1,6 @@
-/// Core automatically generated
-/// lib/src/generated/world_transform_component_base.dart.
-/// Do not modify manually.
+// Core automatically generated
+// lib/src/generated/world_transform_component_base.dart.
+// Do not modify manually.
 
 import 'package:rive/src/generated/component_base.dart';
 import 'package:rive/src/generated/container_component_base.dart';
@@ -19,9 +19,9 @@ abstract class WorldTransformComponentBase extends ContainerComponent {
 
   /// --------------------------------------------------------------------------
   /// Opacity field with key 18.
+  static const int opacityPropertyKey = 18;
   static const double opacityInitialValue = 1;
   double _opacity = opacityInitialValue;
-  static const int opacityPropertyKey = 18;
   double get opacity => _opacity;
 
   /// Change the [_opacity] field value.
@@ -40,8 +40,10 @@ abstract class WorldTransformComponentBase extends ContainerComponent {
   void opacityChanged(double from, double to);
 
   @override
-  void copy(covariant WorldTransformComponentBase source) {
+  void copy(Core source) {
     super.copy(source);
-    _opacity = source._opacity;
+    if (source is WorldTransformComponentBase) {
+      _opacity = source._opacity;
+    }
   }
 }

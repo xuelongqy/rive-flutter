@@ -1,11 +1,11 @@
 import 'dart:ui' as ui;
 
-import 'package:rive/src/core/core.dart';
 import 'package:rive/src/generated/shapes/image_base.dart';
 import 'package:rive/src/rive_core/assets/file_asset.dart';
 import 'package:rive/src/rive_core/assets/image_asset.dart';
 import 'package:rive/src/rive_core/bones/skinnable.dart';
 import 'package:rive/src/rive_core/component.dart';
+import 'package:rive/src/rive_core/container_component.dart';
 import 'package:rive/src/rive_core/shapes/mesh.dart';
 import 'package:rive/src/rive_core/shapes/mesh_vertex.dart';
 import 'package:rive_common/math.dart';
@@ -19,6 +19,10 @@ class Image extends ImageBase
   Mesh? get mesh => _mesh;
   bool get hasMesh => _mesh != null;
 
+  double get width => image?.width.toDouble() ?? asset!.width;
+  double get height => image?.height.toDouble() ?? asset!.height;
+
+  @override
   AABB get localBounds {
     if (hasMesh && _mesh!.draws) {
       return _mesh!.bounds;
@@ -26,9 +30,12 @@ class Image extends ImageBase
     if (asset == null) {
       return AABB.empty();
     }
-    final halfWidth = asset!.width / 2;
-    final halfHeight = asset!.height / 2;
-    return AABB.fromValues(-halfWidth, -halfHeight, halfWidth, halfHeight);
+    return AABB.fromValues(
+      -width * originX,
+      -height * originY,
+      -width * originX + width,
+      -height * originY + height,
+    );
   }
 
   @override
@@ -44,15 +51,14 @@ class Image extends ImageBase
 
     final paint = ui.Paint()
       ..color = ui.Color.fromRGBO(0, 0, 0, renderOpacity)
-      ..filterQuality = ui.FilterQuality.high;
-
-    final width = asset!.width;
-    final height = asset!.height;
+      ..filterQuality = ui.FilterQuality.high
+      ..blendMode = blendMode;
 
     canvas.save();
     canvas.transform(renderTransform.mat4);
     if (_mesh == null || !_mesh!.draws) {
-      canvas.drawImage(uiImage, ui.Offset(-width / 2, -height / 2), paint);
+      canvas.drawImage(
+          uiImage, ui.Offset(-width * originX, -height * originY), paint);
     } else {
       paint.shader = ui.ImageShader(
           uiImage,
@@ -121,6 +127,12 @@ class Image extends ImageBase
 
   @override
   Skinnable<MeshVertex>? get skinnable => _mesh;
+
+  @override
+  void originXChanged(double from, double to) => markTransformDirty();
+
+  @override
+  void originYChanged(double from, double to) => markTransformDirty();
 
   Mat2D get renderTransform {
     var mesh = _mesh;

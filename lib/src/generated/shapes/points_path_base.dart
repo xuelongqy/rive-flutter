@@ -1,6 +1,7 @@
-/// Core automatically generated lib/src/generated/shapes/points_path_base.dart.
-/// Do not modify manually.
+// Core automatically generated lib/src/generated/shapes/points_path_base.dart.
+// Do not modify manually.
 
+import 'package:rive/src/core/core.dart';
 import 'package:rive/src/generated/component_base.dart';
 import 'package:rive/src/generated/container_component_base.dart';
 import 'package:rive/src/generated/node_base.dart';
@@ -25,9 +26,9 @@ abstract class PointsPathBase extends Path {
 
   /// --------------------------------------------------------------------------
   /// IsClosed field with key 32.
+  static const int isClosedPropertyKey = 32;
   static const bool isClosedInitialValue = false;
   bool _isClosed = isClosedInitialValue;
-  static const int isClosedPropertyKey = 32;
 
   /// If the path should close back on its first vertex.
   @override
@@ -49,8 +50,10 @@ abstract class PointsPathBase extends Path {
   void isClosedChanged(bool from, bool to);
 
   @override
-  void copy(covariant PointsPathBase source) {
+  void copy(Core source) {
     super.copy(source);
-    _isClosed = source._isClosed;
+    if (source is PointsPathBase) {
+      _isClosed = source._isClosed;
+    }
   }
 }

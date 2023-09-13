@@ -1,6 +1,6 @@
-import 'package:rive/src/core/core.dart';
 import 'package:rive/src/generated/component_base.dart';
 import 'package:rive/src/rive_core/artboard.dart';
+import 'package:rive/src/rive_core/component_dirt.dart';
 import 'package:rive/src/rive_core/container_component.dart';
 import 'package:rive_common/utilities.dart';
 
@@ -11,6 +11,23 @@ abstract class Component extends ComponentBase<RuntimeArtboard>
   Artboard? _artboard;
   dynamic _userData;
 
+  /// Whether this Component's update processes at all.
+  bool get isCollapsed => (dirt & ComponentDirt.collapsed) != 0;
+
+  bool propagateCollapse(bool collapse) {
+    if (isCollapsed == collapse) {
+      return false;
+    }
+    if (collapse) {
+      dirt |= ComponentDirt.collapsed;
+    } else {
+      dirt &= ~ComponentDirt.collapsed;
+    }
+    onDirty(dirt);
+    artboard?.onComponentDirty(this);
+    return true;
+  }
+
   /// Override to true if you want some object inheriting from Component to not
   /// have a parent. Most objects will validate that they have a parent during
   /// the onAdded callback otherwise they are considered invalid and are culled
@@ -19,7 +36,7 @@ abstract class Component extends ComponentBase<RuntimeArtboard>
 
   // Used during update process.
   int graphOrder = 0;
-  int dirt = 0xFFFF;
+  int dirt = ComponentDirt.filthy;
 
   // This is really only for sanity and earlying out of recursive loops.
   static const int maxTreeDepth = 5000;
@@ -113,6 +130,7 @@ abstract class Component extends ComponentBase<RuntimeArtboard>
     if (_parent == value) {
       return;
     }
+    propagateCollapse(false);
     var old = _parent;
     _parent = value;
     parentId = value?.id ?? Core.missingId;
@@ -140,6 +158,20 @@ abstract class Component extends ComponentBase<RuntimeArtboard>
   @override
   Set<Component> get dependents => _dependents;
 
+  Set<Component> get dependencies {
+    Set<Component> components = {};
+    allDependencies(components);
+    return components;
+  }
+
+  void allDependencies(Set<Component> dependencies) {
+    for (final dependency in _dependsOn) {
+      if (dependencies.add(dependency)) {
+        dependency.allDependencies(dependencies);
+      }
+    }
+  }
+
   /// Mark [dependent] as a component which must update after this. Provide
   /// [via] as the Component registering the dependency when it is not
   /// [dependent] itself. At edit time this allows the editor to rebuild both
@@ -163,6 +195,7 @@ abstract class Component extends ComponentBase<RuntimeArtboard>
       // no context, or already dirty.
       return;
     }
+
     for (final dependent in _dependents) {
       dependent.markRebuildDependencies();
     }
